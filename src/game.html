@@ -85,6 +85,45 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .result .sub{font-weight:700; opacity:.9; margin-top:-6px}
 .result .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
 #fx{position:fixed; inset:0; pointer-events:none; z-index:30}
+/* Victoire d'un personnage spécial */
+.burst{position:fixed; inset:0; z-index:25; pointer-events:none; display:grid; place-items:center; overflow:hidden}
+.burst[hidden]{display:none!important}
+.burst .flash{position:absolute; inset:0; background:#fff; opacity:0; animation:flash 1.5s ease-out forwards}
+@keyframes flash{0%{opacity:0} 6%{opacity:.95} 22%{opacity:0} 30%{opacity:.6} 45%{opacity:0} 100%{opacity:0}}
+.rays{position:absolute; width:250vmax; aspect-ratio:1; border-radius:50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,77,109,.55) 0 6deg, transparent 6deg 15deg, rgba(255,210,58,.55) 15deg 21deg, transparent 21deg 30deg, rgba(92,255,138,.5) 30deg 36deg, transparent 36deg 45deg, rgba(58,208,255,.55) 45deg 51deg, transparent 51deg 60deg, rgba(180,92,255,.6) 60deg 66deg, transparent 66deg 75deg);
+  -webkit-mask-image:radial-gradient(circle, #000 8%, transparent 45%); mask-image:radial-gradient(circle, #000 8%, transparent 45%);
+  animation:spinRays 6s linear infinite, raysIn .5s ease-out both}
+@keyframes spinRays{to{transform:rotate(360deg)}}
+@keyframes raysIn{from{opacity:0; scale:.2} to{opacity:1; scale:1}}
+.burst .hero{position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; animation:heroIn 1.5s cubic-bezier(.2,1.5,.4,1) both}
+.burst .hero img{width:min(220px,46vw); aspect-ratio:1; border-radius:50%; border:8px solid #fff;
+  box-shadow:0 0 0 5px var(--ink), 0 0 40px 14px rgba(255,255,255,.9), 0 0 90px 30px rgba(180,92,255,.8); animation:aura .35s ease-in-out infinite alternate}
+@keyframes aura{to{box-shadow:0 0 0 5px var(--ink), 0 0 60px 22px rgba(255,255,255,1), 0 0 130px 50px rgba(255,210,58,.85)}}
+@keyframes heroIn{0%{transform:scale(0) rotate(-200deg); opacity:0} 35%{transform:scale(1.15) rotate(8deg); opacity:1} 50%{transform:scale(1) rotate(0)} 85%{transform:scale(1); opacity:1} 100%{transform:scale(2.4); opacity:0}}
+.burst .hero b{font-family:var(--display); font-weight:400; font-size:clamp(34px,8vw,72px); line-height:1; white-space:nowrap;
+  background:linear-gradient(90deg,#ff4d6d,#ffd23a,#5cff8a,#3ad0ff,#b45cff,#ff4d6d); background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:2px var(--ink);
+  filter:drop-shadow(0 5px 0 var(--ink)); animation:rainbow 1s linear infinite}
+@keyframes rainbow{to{background-position:200% 0}}
+.shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97) 2}
+@keyframes shake{10%,90%{transform:translate(-2px,1px)} 20%,80%{transform:translate(5px,-3px)} 30%,50%,70%{transform:translate(-8px,4px)} 40%,60%{transform:translate(8px,-4px)}}
+/* Carte résultat en mode spécial */
+#resultScreen.special{background:radial-gradient(circle at 50% 45%, rgba(120,40,200,.55), rgba(6,10,40,.88) 70%)}
+#resultScreen.special .result{position:relative; border-color:transparent; isolation:isolate;
+  background:linear-gradient(#5b1fa8, #1a0b44) padding-box, conic-gradient(from var(--a,0deg), #ff4d6d, #ffd23a, #5cff8a, #3ad0ff, #b45cff, #ff4d6d) border-box;
+  animation:pop .45s cubic-bezier(.2,1.6,.4,1), hue 2s linear infinite; box-shadow:0 0 0 4px var(--ink), 0 0 50px 10px rgba(180,92,255,.7), 0 20px 50px rgba(0,0,0,.5)}
+@property --a{syntax:"<angle>"; inherits:false; initial-value:0deg}
+@keyframes hue{to{--a:360deg}}
+#resultScreen.special .label{font-size:26px; background:linear-gradient(90deg,#ff4d6d,#ffd23a,#5cff8a,#3ad0ff,#b45cff,#ff4d6d); background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:1px var(--ink); animation:rainbow 1.2s linear infinite}
+#resultScreen.special .cardwrap{position:relative; border-radius:12px; overflow:hidden; animation:glow 1.2s ease-in-out infinite alternate}
+#resultScreen.special .cardwrap::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(110deg, transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%); background-size:250% 100%; animation:shine 2.2s ease-in-out infinite}
+@keyframes shine{from{background-position:150% 0} to{background-position:-100% 0}}
+@keyframes glow{from{filter:drop-shadow(0 0 6px rgba(255,255,255,.6))} to{filter:drop-shadow(0 0 22px rgba(255,210,58,.95))}}
+.cardwrap{display:block; line-height:0}
+#resultScreen.special .name{background:linear-gradient(#fff,#ffe36b); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 3px 0 var(--ink))}
 /* Écran d'accueil */
 .home{
   position:fixed; inset:0; z-index:15; overflow-y:auto; overflow-x:hidden;
@@ -139,7 +178,8 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .grid img{display:block; width:100%; aspect-ratio:3/4.2; object-fit:contain; background:var(--ink)}
 @media (max-width:520px){ .mode .faces img{width:24px; height:24px; margin-left:-9px} .mode{width:min(30vw,130px); padding-inline:6px} }
 
-@media (prefers-reduced-motion: reduce){ .result{animation:none} .toast{transition:none} }
+@media (prefers-reduced-motion: reduce){ .result, #resultScreen.special .result{animation:none} .toast{transition:none}
+  #resultScreen.special .label, #resultScreen.special .cardwrap, #resultScreen.special .cardwrap::after{animation:none} }
 </style>
 
 <div class="app">
@@ -189,7 +229,7 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 <div class="overlay" id="resultScreen" hidden>
   <div class="result" role="dialog" aria-labelledby="resName">
     <div class="label" id="resLabel">Tu es tombé sur…</div>
-    <img id="resImg" alt="">
+    <span class="cardwrap"><img id="resImg" alt=""></span>
     <div class="name" id="resName"></div>
     <div class="sub" id="resSub"></div>
     <div class="row">
@@ -197,6 +237,12 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
       <button class="reset" id="removeBtn">Retirer de la roue</button>
     </div>
   </div>
+</div>
+
+<div class="burst" id="burst" hidden aria-hidden="true">
+  <div class="rays"></div>
+  <div class="flash"></div>
+  <div class="hero"><img id="burstImg" alt=""><b>SPÉCIAL&nbsp;!</b></div>
 </div>
 
 <canvas id="fx"></canvas>
@@ -500,9 +546,22 @@ function onStop(){
   $("spinBtn").disabled = false;
   winner = currentIndex(); winPulse = 0;
   const ch = chars[winner];
+  if (ch.group === "special"){ specialWin(ch); return; }
   audio.win();
   confetti();
   setTimeout(() => showResult(ch), 650);
+}
+function specialWin(ch){
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  audio.superWin();
+  if (calm){ setTimeout(() => showResult(ch), 400); return; }
+  $("burstImg").src = ch.face;
+  const b = $("burst"); b.hidden = false;
+  b.querySelectorAll(".flash,.hero,.rays").forEach(el => { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
+  const app = document.querySelector(".app"); app.classList.remove("shake"); void app.offsetWidth; app.classList.add("shake");
+  bolts(); setTimeout(() => confetti(true), 250);
+  setTimeout(() => { showResult(ch); confetti(true); }, 1450);
+  setTimeout(() => { b.hidden = true; app.classList.remove("shake"); }, 1550);
 }
 
 /* ---------- Résultat ---------- */
@@ -511,6 +570,9 @@ function showResult(ch){
   $("resLabel").textContent = "Tu es tombé sur…"; $("againBtn").textContent = "REJOUER";
   $("resImg").src = ch.card; $("resImg").alt = ch.name;
   $("resName").textContent = ch.name; $("resSub").textContent = ch.sub;
+  const sp = ch.group === "special";
+  $("resultScreen").classList.toggle("special", sp);
+  if (sp) $("resLabel").textContent = "★ PERSONNAGE SPÉCIAL ! ★";
   $("removeBtn").hidden = chars.length <= 2;
   $("resultScreen").hidden = false;
   $("againBtn").focus({ preventScroll: true });
@@ -537,28 +599,80 @@ function toast(msg){
 /* ---------- Confettis d'anneaux ---------- */
 const fx = $("fx"), fctx = fx.getContext("2d");
 let parts = [], fxRunning = false;
-function confetti(){
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  fx.width = innerWidth * dpr; fx.height = innerHeight * dpr;
+const RAINBOW = ["#ff4d6d","#ffd23a","#5cff8a","#3ad0ff","#b45cff","#ffffff"];
+let boltList = [];
+function bolts(){
+  sizeFx();
   const W = fx.width, H = fx.height;
-  for (let i = 0; i < 70; i++){
-    parts.push({ x: W/2 + (Math.random()-.5)*W*0.2, y: H*0.45, vx: (Math.random()-.5)*W*1.1, vy: -H*(0.6+Math.random()*0.9),
-      r: (8+Math.random()*10)*dpr, ph: Math.random()*TAU, sp: 6+Math.random()*10, life: 0 });
+  for (let k = 0; k < 7; k++){
+    const a = Math.random()*TAU, pts = [];
+    let x = W/2, y = H/2; const len = Math.hypot(W,H)*0.6, n = 9;
+    for (let i = 0; i <= n; i++){
+      const d = len*i/n, j = (Math.random()-.5)*len*0.09;
+      pts.push([W/2 + Math.cos(a)*d - Math.sin(a)*j, H/2 + Math.sin(a)*d + Math.cos(a)*j]);
+    }
+    boltList.push({ pts, life: -k*0.07, col: RAINBOW[k % 5] });
   }
+  startFx();
+}
+function star(c, x, y, r, rot){
+  c.beginPath();
+  for (let i = 0; i < 10; i++){ const rr = i % 2 ? r*0.45 : r, a = rot + i*Math.PI/5; c.lineTo(x + Math.cos(a)*rr, y + Math.sin(a)*rr); }
+  c.closePath();
+}
+function sizeFx(){
+  const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
+  if (fx.width !== w || fx.height !== h){ fx.width = w; fx.height = h; }
+}
+function confetti(special){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  sizeFx();
+  const W = fx.width, H = fx.height;
+  const n = special ? 110 : 70;
+  for (let i = 0; i < n; i++){
+    parts.push({ x: W/2 + (Math.random()-.5)*W*0.2, y: H*0.45, vx: (Math.random()-.5)*W*(special ? 1.6 : 1.1), vy: -H*(0.6+Math.random()*(special ? 1.2 : 0.9)),
+      r: (8+Math.random()*10)*dpr, ph: Math.random()*TAU, sp: 6+Math.random()*10, life: 0,
+      kind: special && Math.random() < 0.6 ? "star" : "ring", col: RAINBOW[i % RAINBOW.length] });
+  }
+  startFx();
+}
+function startFx(){
   if (!fxRunning){ fxRunning = true; let lt = performance.now(); requestAnimationFrame(function loop(t){
     const dt = Math.min(0.05,(t-lt)/1000); lt = t;
+    const W = fx.width, H = fx.height;
     fctx.clearRect(0,0,W,H);
     parts = parts.filter(p => p.life < 3.2 && p.y < H + 50);
+    boltList = boltList.filter(b => b.life < 0.45);
+    for (const b of boltList){
+      b.life += dt; if (b.life < 0) continue;
+      fctx.save(); fctx.globalAlpha = Math.max(0, 1 - b.life/0.45) * (Math.random() < 0.3 ? 0.5 : 1);
+      fctx.lineJoin = "round"; fctx.lineCap = "round";
+      fctx.beginPath(); b.pts.forEach(([x,y],i) => i ? fctx.lineTo(x,y) : fctx.moveTo(x,y));
+      fctx.shadowColor = b.col; fctx.shadowBlur = 30*dpr;
+      fctx.lineWidth = 12*dpr; fctx.strokeStyle = b.col; fctx.stroke();
+      fctx.shadowBlur = 0; fctx.lineWidth = 4*dpr; fctx.strokeStyle = "#fff"; fctx.stroke();
+      fctx.restore();
+    }
     for (const p of parts){
       p.life += dt; p.vy += H*1.6*dt; p.vx *= (1 - 0.8*dt); p.x += p.vx*dt; p.y += p.vy*dt; p.ph += p.sp*dt;
       const sx = Math.abs(Math.cos(p.ph));
       fctx.save(); fctx.globalAlpha = Math.min(1, 3.2 - p.life);
-      fctx.beginPath(); fctx.ellipse(p.x, p.y, p.r*Math.max(.12,sx), p.r, 0, 0, TAU);
-      fctx.lineWidth = p.r*0.38; fctx.strokeStyle = "#b86b00"; fctx.stroke();
-      fctx.lineWidth = p.r*0.24; fctx.strokeStyle = "#ffd93a"; fctx.stroke();
+      if (p.kind === "star"){
+        star(fctx, p.x, p.y, p.r*1.1*Math.max(.3,sx), p.ph*0.3);
+        fctx.fillStyle = p.col; fctx.fill(); fctx.lineWidth = p.r*0.15; fctx.strokeStyle = "#0a1f4d"; fctx.stroke();
+      } else {
+        fctx.beginPath(); fctx.ellipse(p.x, p.y, p.r*Math.max(.12,sx), p.r, 0, 0, TAU);
+        if (p.kind === "ring" && p.col){
+          fctx.lineWidth = p.r*0.38; fctx.strokeStyle = "#0a1f4d"; fctx.stroke();
+          fctx.lineWidth = p.r*0.24; fctx.strokeStyle = p.col; fctx.stroke();
+        } else {
+          fctx.lineWidth = p.r*0.38; fctx.strokeStyle = "#b86b00"; fctx.stroke();
+          fctx.lineWidth = p.r*0.24; fctx.strokeStyle = "#ffd93a"; fctx.stroke();
+        }
+      }
       fctx.restore();
     }
-    if (parts.length) requestAnimationFrame(loop); else { fxRunning = false; fctx.clearRect(0,0,W,H); }
+    if (parts.length || boltList.length) requestAnimationFrame(loop); else { fxRunning = false; fctx.clearRect(0,0,W,H); }
   }); }
 }
 
@@ -747,6 +861,35 @@ const audio = (() => {
     });
     for (let i = 0; i < 6; i++) chime(t + 0.55 + i*0.11, 1319 + i*40, 2093 + i*60, 0.08);
   }
+  function superWin(){
+    if (!ac || !sfxOn) return;
+    const t = ac.currentTime + 0.02;
+    musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(musicOn ? 0.08 : 0, t, 0.04); musicBus.gain.setTargetAtTime(musicOn ? 0.55 : 0, t + 3.4, 0.4);
+    // montée d'énergie
+    const o = ac.createOscillator(), g = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+    o.type = "sawtooth"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(1760, t + 0.9);
+    lfo.frequency.value = 18; lg.gain.value = 40; lfo.connect(lg).connect(o.frequency);
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(600, t); lp.frequency.exponentialRampToValueAtTime(6000, t + 0.9);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.0);
+    o.connect(lp).connect(g).connect(sfxBus); o.start(t); lfo.start(t); o.stop(t + 1.05); lfo.stop(t + 1.05);
+    // coup de tonnerre
+    noise(t, 0.9, "lowpass", 900, 0.6, sfxBus);
+    noise(t + 0.02, 0.25, "highpass", 3000, 0.25, sfxBus);
+    // fanfare majestueuse
+    const T = t + 0.95;
+    const fan = [[67,0,.12],[72,1,.12],[76,2,.12],[79,3,.12],[84,4,.3],[83,5.2,.12],[84,6,.12],[88,7,1.1]];
+    fan.forEach(([m, k, len]) => {
+      const st = T + k*0.1, end = st + len;
+      [0, 4, 7].forEach((iv, j) => {
+        const os = ac.createOscillator(), gg = ac.createGain(); os.type = j ? "triangle" : "square";
+        os.frequency.value = mtof(m + (j ? iv - 12 : 0)); os.detune.value = j*6;
+        gg.gain.setValueAtTime(0.0001, st); gg.gain.exponentialRampToValueAtTime(j ? 0.06 : 0.1, st + 0.01);
+        gg.gain.setValueAtTime(j ? 0.06 : 0.1, end - 0.04); gg.gain.exponentialRampToValueAtTime(0.0001, end + 0.25);
+        os.connect(gg).connect(sfxBus); os.start(st); os.stop(end + 0.3);
+      });
+    });
+    for (let i = 0; i < 12; i++) chime(T + 0.3 + i*0.09, 1568 + i*70, 2637 + i*90, 0.06);
+  }
   function setSpinLevel(w){
     if (!spinNode) return;
     const t = ac.currentTime, x = Math.min(1, w / 30);
@@ -755,7 +898,7 @@ const audio = (() => {
   }
   function setMusic(on){ musicOn = on; if (musicBus) musicBus.gain.setTargetAtTime(on ? 0.55 : 0, ac.currentTime, 0.05); }
   function setSfx(on){ sfxOn = on; if (sfxBus) sfxBus.gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.02); }
-  return { unlock, tick, whoosh, win, setSpinLevel, setMusic, setSfx, get musicOn(){return musicOn}, get sfxOn(){return sfxOn} };
+  return { unlock, tick, whoosh, win, superWin, setSpinLevel, setMusic, setSfx, get musicOn(){return musicOn}, get sfxOn(){return sfxOn} };
 })();
 
 $("musicBtn").addEventListener("click", () => { audio.unlock(); audio.setMusic(!audio.musicOn); $("musicBtn").classList.toggle("off", !audio.musicOn); });
@@ -790,6 +933,7 @@ function buildHome(){
         $("resLabel").textContent = c.sub; $("resImg").src = c.card; $("resImg").alt = c.name;
         $("resName").textContent = c.name; $("resSub").textContent = "";
         $("againBtn").textContent = "FERMER"; $("removeBtn").hidden = true;
+        $("resultScreen").classList.toggle("special", c.group === "special");
         $("resultScreen").hidden = false; $("againBtn").focus({ preventScroll: true });
       });
       grid.appendChild(b);
