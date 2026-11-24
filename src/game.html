@@ -13,7 +13,7 @@
   color-scheme: light;
 }
 html,body{height:100%}
-html{background:var(--sky-deep)}
+html{background:#000}
 body{
   margin:0; overflow:hidden; font-family:var(--body); color:var(--white);
   background-color:var(--sky);
@@ -280,7 +280,7 @@ dialog.modal[open]:where(:not([data-closing]))::backdrop{
 .logo .l2{display:block; margin-top:.32em; font-family:var(--display); font-weight:400; font-size:clamp(48px,12vw,112px); color:var(--gold);
   -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; text-shadow:0 6px 0 var(--ink), 0 14px 30px rgba(0,0,0,.45)}
 @keyframes bob{50%{transform:translateY(-6px) rotate(-1deg)}}
-.strip{width:100vw; overflow:hidden; mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.strip{width:100vw; overflow:hidden; padding-block:22px; mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
 .strip .track{display:flex; gap:14px; width:max-content}
 @media (prefers-reduced-motion: no-preference){
   .logo .l2{animation:bob 2.4s ease-in-out infinite}
@@ -291,7 +291,7 @@ dialog.modal[open]:where(:not([data-closing]))::backdrop{
 @keyframes scroll{to{transform:translateX(-50%)}}
 .strip img{width:clamp(56px,9vw,84px); aspect-ratio:1; border-radius:50%; border:4px solid var(--gold); box-shadow:0 0 0 3px var(--ink), 0 6px 12px rgba(0,0,0,.35); background:#fff}
 .strip.rev img{border-color:#fff; box-shadow:0 0 0 3px var(--ink), 0 0 18px 4px rgba(190,120,255,.85)}
-.modes{display:flex; gap:clamp(12px,3vw,22px); margin-block:clamp(6px,1.6vh,16px); flex-wrap:wrap; justify-content:center}
+.modes{display:flex; gap:clamp(12px,3vw,22px); row-gap:30px; padding-bottom:14px; margin-block:clamp(6px,1.6vh,16px); flex-wrap:wrap; justify-content:center}
 .mode{
   width:clamp(100px,24vw,170px); padding:12px 10px 10px; border-radius:18px; color:var(--white);
   background:linear-gradient(rgba(58,156,255,.95), rgba(11,60,140,.95)); border:3px solid var(--ink);
