@@ -42,7 +42,25 @@ for k, (cid, name, sub, color) in enumerate(chars):
     w, h = card.size
     s = w - 32
     face = card.crop((16, 4, 16 + s, 4 + s)).resize((168, 168), Image.LANCZOS)
-    out.append({"id": cid, "name": name, "sub": sub, "color": color,
+    out.append({"id": cid, "name": name, "sub": sub, "color": color, "group": "classic",
+                "face": b64(face, 84), "card": b64(card, 88)})
+
+# Affiche n°2 : « Personnages spéciaux » (5 cartes de tailles différentes)
+src2 = Image.open(ROOT / "assets/source2.png").convert("RGB")
+specials = [
+    ("supersonic", "SUPER SONIC", "Le hérisson super", "#f2b705", (12, 246, 340, 794)),
+    ("darksonic", "SUPER DARK SONIC", "Le hérisson noir suprême", "#6b1fb8", (353, 246, 674, 794)),
+    ("darktails", "DARK TAILS", "Le renard ténèbre suprême", "#2b2236", (684, 246, 1012, 794)),
+    ("shadowdark", "DARK SONIC ULTIME", "Le hérisson ombre suprême", "#a23ce0", (105, 806, 494, 1424)),
+    ("hypersonic", "HYPER SONIC", "Le hérisson hyper", "#29c4d8", (530, 806, 920, 1424)),
+]
+for cid, name, sub, color, box in specials:
+    card = src2.crop(box)
+    card.save(ROOT / f"assets/cards/{cid}.png")
+    w, h = card.size
+    s = int(w * 0.74); x = (w - s) // 2; y = int(h * 0.09)
+    face = card.crop((x, y, x + s, y + s)).resize((168, 168), Image.LANCZOS)
+    out.append({"id": cid, "name": name, "sub": sub, "color": color, "group": "special",
                 "face": b64(face, 84), "card": b64(card, 88)})
 (ROOT / "assets/chars.json").write_text(json.dumps(out, ensure_ascii=False))
 print("ok", len(out))

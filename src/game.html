@@ -85,6 +85,60 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .result .sub{font-weight:700; opacity:.9; margin-top:-6px}
 .result .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
 #fx{position:fixed; inset:0; pointer-events:none; z-index:30}
+/* Écran d'accueil */
+.home{
+  position:fixed; inset:0; z-index:15; overflow-y:auto; overflow-x:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:clamp(12px,2.6vh,26px);
+  padding:max(16px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-right,0px)) max(16px, env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px));
+  box-sizing:border-box;
+  background-color:var(--sky-deep);
+  background-image:
+    radial-gradient(ellipse at 50% 30%, rgba(255,255,255,.22), rgba(6,24,66,.75) 80%),
+    conic-gradient(var(--sky) 25%, var(--sky-2) 0 50%, var(--sky) 0 75%, var(--sky-2) 0);
+  background-size:100% 100%, 64px 64px;
+}
+.home[hidden]{display:none!important}
+.logo{text-align:center; line-height:.92; margin:0}
+.logo .l1{display:block; font-family:var(--display); font-weight:400; font-size:clamp(22px,4.5vw,38px); color:var(--white);
+  -webkit-text-stroke:2px var(--ink); paint-order:stroke fill; text-shadow:0 4px 0 var(--ink); letter-spacing:.08em}
+.logo .l2{display:block; margin-top:.32em; font-family:var(--display); font-weight:400; font-size:clamp(48px,12vw,112px); color:var(--gold);
+  -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; text-shadow:0 6px 0 var(--ink), 0 14px 30px rgba(0,0,0,.45);
+  animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-1deg)}}
+.strip{width:100vw; overflow:hidden; mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.strip .track{display:flex; gap:14px; width:max-content; animation:scroll 40s linear infinite}
+.strip.rev .track{animation-direction:reverse; animation-duration:26s}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.strip img{width:clamp(56px,9vw,84px); aspect-ratio:1; border-radius:50%; border:4px solid var(--gold); box-shadow:0 0 0 3px var(--ink), 0 6px 12px rgba(0,0,0,.35); background:#fff}
+.strip.rev img{border-color:#fff; box-shadow:0 0 0 3px var(--ink), 0 0 18px 4px rgba(190,120,255,.85)}
+.modes{display:flex; gap:clamp(8px,2vw,16px); flex-wrap:wrap; justify-content:center}
+.mode{
+  width:clamp(100px,24vw,170px); padding:12px 10px 10px; border-radius:18px; color:var(--white);
+  background:linear-gradient(rgba(58,156,255,.95), rgba(11,60,140,.95)); border:3px solid var(--ink);
+  box-shadow:0 5px 0 var(--ink); display:flex; flex-direction:column; align-items:center; gap:6px; transition:transform .1s;
+}
+.mode .faces{display:flex; max-width:100%}
+.mode .faces img{width:34px; height:34px; border-radius:50%; border:2px solid var(--ink); margin-left:-10px; background:#fff}
+.mode .faces img:first-child{margin-left:0}
+.mode b{font-family:var(--display); font-weight:400; font-size:clamp(17px,2.8vw,22px); letter-spacing:.04em; text-shadow:0 2px 0 var(--ink)}
+.mode small{font-weight:900; font-size:13px; opacity:.9}
+.mode[aria-pressed="true"]{background:linear-gradient(#fff36b, var(--gold) 45%, var(--gold-deep)); color:var(--ink); transform:translateY(-4px); box-shadow:0 9px 0 var(--ink), 0 0 0 4px var(--white)}
+.mode[aria-pressed="true"] b{text-shadow:none}
+.mode.special:not([aria-pressed="true"]){background:linear-gradient(#a24be8, #3b0f73)}
+.home .actions{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center}
+.btn.huge{font-size:clamp(28px,5vw,40px); padding:16px 48px 10px}
+/* Collection */
+.gallery{width:min(920px,100%); max-height:100%; overflow:auto; background:linear-gradient(var(--sky-2), var(--sky-deep));
+  border:4px solid var(--gold); border-radius:22px; box-shadow:0 0 0 4px var(--ink), 0 20px 50px rgba(0,0,0,.5); padding:16px; box-sizing:border-box}
+.gallery header{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
+.gallery h2{margin:0; font-family:var(--display); font-weight:400; font-size:28px; color:var(--gold); -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill}
+.gallery h3{margin:14px 0 8px; font-family:var(--display); font-weight:400; font-size:20px; letter-spacing:.04em}
+.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(118px,1fr)); gap:10px}
+.grid button{padding:0; background:none; border-radius:10px; overflow:hidden; box-shadow:0 4px 0 var(--ink); transition:transform .1s}
+.grid button:hover{transform:translateY(-3px)}
+.grid img{display:block; width:100%; aspect-ratio:3/4.2; object-fit:contain; background:var(--ink)}
+@media (max-width:520px){ .mode .faces img{width:24px; height:24px; margin-left:-9px} .mode{width:min(30vw,130px); padding-inline:6px} }
+
 @media (prefers-reduced-motion: reduce){ .result{animation:none} .toast{transition:none} }
 </style>
 
@@ -96,6 +150,7 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
     <div class="toast" id="toast"></div>
   </div>
   <div class="bar">
+    <button class="icon" id="homeBtn" aria-label="Accueil" title="Accueil">⌂</button>
     <button class="icon" id="musicBtn" aria-label="Musique" title="Musique">♪</button>
     <button class="btn" id="spinBtn">LANCER&nbsp;!</button>
     <button class="icon" id="sfxBtn" aria-label="Bruitages" title="Bruitages">🔊</button>
@@ -106,17 +161,34 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
   </div>
 </div>
 
-<div class="overlay" id="startScreen">
-  <div class="start">
-    <div class="big">Prêt&nbsp;?</div>
-    <p>Fais tourner la roue&nbsp;: plus tu la lances fort, plus elle tourne longtemps.</p>
-    <button class="btn" id="startBtn">JOUER&nbsp;!</button>
+<section class="home" id="home" aria-label="Accueil">
+  <h2 class="logo"><span class="l1">LA ROUE</span><span class="l2">DES HÉROS</span></h2>
+  <div class="strip" aria-hidden="true"><div class="track" id="stripA"></div></div>
+  <div class="strip rev" aria-hidden="true"><div class="track" id="stripB"></div></div>
+  <div class="modes" role="group" aria-label="Choisis tes personnages">
+    <button class="mode" data-mode="classic"><span class="faces" data-faces="classic"></span><b>HÉROS</b><small data-count="classic"></small></button>
+    <button class="mode special" data-mode="special"><span class="faces" data-faces="special"></span><b>SPÉCIAUX</b><small data-count="special"></small></button>
+    <button class="mode" data-mode="all"><span class="faces" data-faces="all"></span><b>TOUS</b><small data-count="all"></small></button>
+  </div>
+  <div class="actions">
+    <button class="btn huge" id="startBtn">JOUER&nbsp;!</button>
+  </div>
+  <div class="actions">
+    <button class="reset" id="galleryBtn">Voir la collection</button>
+  </div>
+</section>
+
+<div class="overlay" id="galleryScreen" hidden>
+  <div class="gallery" role="dialog" aria-labelledby="galTitle">
+    <header><h2 id="galTitle">Collection</h2><button class="reset" id="galClose">Fermer ✕</button></header>
+    <h3>Personnages spéciaux</h3><div class="grid" data-grid="special"></div>
+    <h3>Héros</h3><div class="grid" data-grid="classic"></div>
   </div>
 </div>
 
 <div class="overlay" id="resultScreen" hidden>
   <div class="result" role="dialog" aria-labelledby="resName">
-    <div class="label">Tu es tombé sur…</div>
+    <div class="label" id="resLabel">Tu es tombé sur…</div>
     <img id="resImg" alt="">
     <div class="name" id="resName"></div>
     <div class="sub" id="resSub"></div>
@@ -139,7 +211,11 @@ const canvas = $("wheel"), ctx = canvas.getContext("2d");
 const stage = $("stage");
 
 /* ---------- État ---------- */
-let chars = ALL_CHARS.slice();
+let mode = "all";
+try { mode = localStorage.getItem("roue-mode") || "all"; } catch(_){}
+const pool = () => ALL_CHARS.filter(c => mode === "all" || (c.group || "classic") === mode);
+let chars = pool();
+let viewing = false; // résultat ouvert depuis la collection
 let theta = 0;          // angle de la roue (rad)
 let omega = 0;          // vitesse angulaire (rad/s)
 let launched = false;   // un vrai lancer est en cours
@@ -217,7 +293,13 @@ function renderWheel(){
     g.translate(px,py); g.rotate(mid + Math.PI/2);
     if (ch._face && ch._face.complete && ch._face.naturalWidth) g.drawImage(ch._face, -ps/2, -ps/2, ps, ps);
     g.restore();
-    g.beginPath(); g.arc(px,py,ps/2,0,TAU); g.lineWidth = Math.max(2, ps*0.07); g.strokeStyle = "#ffd23a"; g.stroke();
+    g.beginPath(); g.arc(px,py,ps/2,0,TAU); g.lineWidth = Math.max(2, ps*(ch.group === "special" ? 0.1 : 0.07));
+    if (ch.group === "special" && g.createConicGradient){
+      const cg = g.createConicGradient(0, px, py);
+      ["#ff4d6d","#ffd23a","#5cff8a","#3ad0ff","#b45cff","#ff4d6d"].forEach((col,k,a) => cg.addColorStop(k/(a.length-1), col));
+      g.strokeStyle = cg;
+    } else g.strokeStyle = "#ffd23a";
+    g.stroke();
     g.lineWidth = Math.max(1, ps*0.025); g.strokeStyle = "#0a1f4d"; g.stroke();
 
     // nom, le long du rayon
@@ -425,6 +507,8 @@ function onStop(){
 
 /* ---------- Résultat ---------- */
 function showResult(ch){
+  viewing = false;
+  $("resLabel").textContent = "Tu es tombé sur…"; $("againBtn").textContent = "REJOUER";
   $("resImg").src = ch.card; $("resImg").alt = ch.name;
   $("resName").textContent = ch.name; $("resSub").textContent = ch.sub;
   $("removeBtn").hidden = chars.length <= 2;
@@ -432,14 +516,14 @@ function showResult(ch){
   $("againBtn").focus({ preventScroll: true });
 }
 function closeResult(){ $("resultScreen").hidden = true; }
-$("againBtn").addEventListener("click", () => { closeResult(); winner = -1; });
+$("againBtn").addEventListener("click", () => { closeResult(); if (viewing){ viewing = false; return; } winner = -1; });
 $("removeBtn").addEventListener("click", () => {
   if (winner >= 0) chars.splice(winner, 1);
   winner = -1; closeResult(); renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
-  $("resetBtn").hidden = chars.length === ALL_CHARS.length;
+  $("resetBtn").hidden = chars.length === pool().length;
 });
 $("resetBtn").addEventListener("click", () => {
-  chars = ALL_CHARS.slice(); winner = -1; renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
+  chars = pool(); winner = -1; renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
   $("resetBtn").hidden = true;
 });
 $("spinBtn").addEventListener("click", randomSpin);
@@ -676,7 +760,58 @@ const audio = (() => {
 
 $("musicBtn").addEventListener("click", () => { audio.unlock(); audio.setMusic(!audio.musicOn); $("musicBtn").classList.toggle("off", !audio.musicOn); });
 $("sfxBtn").addEventListener("click", () => { audio.unlock(); audio.setSfx(!audio.sfxOn); $("sfxBtn").classList.toggle("off", !audio.sfxOn); });
-$("startBtn").addEventListener("click", () => { audio.unlock(); $("startScreen").hidden = true; });
+/* ---------- Accueil ---------- */
+function setMode(m){
+  mode = m; try { localStorage.setItem("roue-mode", m); } catch(_){}
+  document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+}
+function buildHome(){
+  const byGroup = g => ALL_CHARS.filter(c => g === "all" || (c.group || "classic") === g);
+  const img = (c, cls) => { const i = new Image(); i.src = c.face; i.alt = ""; i.draggable = false; if (cls) i.className = cls; return i; };
+  // bandeaux défilants (contenu doublé pour une boucle continue)
+  const fill = (el, list) => { for (let k = 0; k < 2; k++) list.forEach(c => el.appendChild(img(c))); };
+  const sp = byGroup("special");
+  fill($("stripA"), byGroup("classic"));
+  fill($("stripB"), sp.length ? [...sp, ...sp, ...sp] : sp);
+  if (!sp.length) $("stripB").parentElement.hidden = true;
+  for (const g of ["classic","special","all"]){
+    const list = byGroup(g), faces = document.querySelector(`[data-faces="${g}"]`);
+    (g === "all" ? [...byGroup("special").slice(0,2), ...byGroup("classic").slice(0,2)] : list.slice(0,4)).forEach(c => faces.appendChild(img(c)));
+    document.querySelector(`[data-count="${g}"]`).textContent = list.length + " personnages";
+    document.querySelector(`[data-mode="${g}"]`).hidden = !list.length;
+  }
+  for (const g of ["special","classic"]){
+    const grid = document.querySelector(`[data-grid="${g}"]`);
+    byGroup(g).forEach(c => {
+      const b = document.createElement("button"); b.setAttribute("aria-label", c.name);
+      b.appendChild(img(c)).src = c.card;
+      b.addEventListener("click", () => {
+        viewing = true;
+        $("resLabel").textContent = c.sub; $("resImg").src = c.card; $("resImg").alt = c.name;
+        $("resName").textContent = c.name; $("resSub").textContent = "";
+        $("againBtn").textContent = "FERMER"; $("removeBtn").hidden = true;
+        $("resultScreen").hidden = false; $("againBtn").focus({ preventScroll: true });
+      });
+      grid.appendChild(b);
+    });
+  }
+  setMode(byGroup(mode).length ? mode : "all");
+}
+document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => { audio.unlock(); setMode(b.dataset.mode); }));
+$("startBtn").addEventListener("click", () => {
+  audio.unlock();
+  if (launched || dragging) return;
+  chars = pool(); omega = 0; winner = -1; renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
+  $("resetBtn").hidden = true; $("spinBtn").disabled = false;
+  $("home").hidden = true;
+});
+$("homeBtn").addEventListener("click", () => {
+  launched = false; omega = 0; dragging = false; winner = -1; $("spinBtn").disabled = false;
+  closeResult(); $("home").hidden = false;
+});
+$("galleryBtn").addEventListener("click", () => { $("galleryScreen").hidden = false; $("galClose").focus({ preventScroll: true }); });
+$("galClose").addEventListener("click", () => { $("galleryScreen").hidden = true; });
+buildHome();
 document.addEventListener("visibilitychange", () => { /* le navigateur suspend déjà l'audio en arrière-plan */ });
 
 /* ---------- Démarrage ---------- */
