@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b3c8c">
 <title>Roue des Héros</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@700;900&display=swap">
 <style>
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
 /* Layout: une seule scène plein écran — titre, roue au centre, barre de commandes en bas. Monde unique (ciel à damier bleu), pas de thème sombre. */
 :root{
   --sky:#1f7fe8; --sky-2:#3a9cff; --sky-deep:#0b3c8c;
@@ -20,6 +21,7 @@
   color-scheme: light;
 }
 html,body{height:100%}
+html{background:var(--sky-deep)}
 body{
   margin:0; overflow:hidden; font-family:var(--body); color:var(--white);
   background-color:var(--sky);
@@ -270,7 +272,7 @@ dialog.modal[open]:where(:not([data-closing]))::backdrop{
 /* Écran d'accueil */
 .home{
   position:fixed; inset:0; z-index:15; overflow-y:auto; overflow-x:hidden;
-  display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:clamp(12px,2.6vh,24px);
+  display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:clamp(18px,3.6vh,34px);
   padding:max(16px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-right,0px)) max(16px, env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px));
   box-sizing:border-box;
   background-color:var(--sky-deep);
@@ -297,7 +299,7 @@ dialog.modal[open]:where(:not([data-closing]))::backdrop{
 @keyframes scroll{to{transform:translateX(-50%)}}
 .strip img{width:clamp(56px,9vw,84px); aspect-ratio:1; border-radius:50%; border:4px solid var(--gold); box-shadow:0 0 0 3px var(--ink), 0 6px 12px rgba(0,0,0,.35); background:#fff}
 .strip.rev img{border-color:#fff; box-shadow:0 0 0 3px var(--ink), 0 0 18px 4px rgba(190,120,255,.85)}
-.modes{display:flex; gap:clamp(8px,2vw,16px); flex-wrap:wrap; justify-content:center}
+.modes{display:flex; gap:clamp(12px,3vw,22px); margin-block:clamp(6px,1.6vh,16px); flex-wrap:wrap; justify-content:center}
 .mode{
   width:clamp(100px,24vw,170px); padding:12px 10px 10px; border-radius:18px; color:var(--white);
   background:linear-gradient(rgba(58,156,255,.95), rgba(11,60,140,.95)); border:3px solid var(--ink);
