@@ -36,55 +36,154 @@ h1{
 }
 h1 span{color:var(--white)}
 .hint{margin:0; font-weight:700; font-size:clamp(13px,2.2vw,17px); text-align:center; text-shadow:0 2px 0 rgba(10,31,77,.6)}
+.ticker{
+  min-height:36px; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:4px 14px 4px 8px; border-radius:999px; background:rgba(10,31,77,.58);
+  border:2px solid rgba(255,255,255,.38); box-shadow:0 3px 0 rgba(10,31,77,.65);
+  transition:border-color .18s, background-color .18s;
+}
+.ticker.idle{padding:4px 14px; background:rgba(10,31,77,.35); border-color:rgba(255,255,255,.22)}
+.ticker.special{border-color:var(--gold); background:linear-gradient(90deg, rgba(88,24,148,.85), rgba(18,12,68,.88))}
+.ticker img{width:28px; height:28px; border-radius:50%; border:2px solid var(--gold); background:#fff; object-fit:cover; flex:none}
+.ticker.idle img{display:none}
+.ticker .tname{font-family:var(--display); font-size:clamp(15px,2.8vw,20px); letter-spacing:.04em; color:var(--white); text-shadow:0 2px 0 var(--ink); line-height:1; padding-top:2px}
+.ticker.idle .tname{font-family:var(--body); font-weight:700; font-size:clamp(12.5px,2.1vw,15px); letter-spacing:0; padding-top:0}
+.ticker.special .tname{color:var(--gold)}
 .stage{flex:1; min-height:0; width:100%; display:flex; align-items:center; justify-content:center; position:relative}
 #wheel{display:block; touch-action:none; cursor:grab; max-width:100%}
 #wheel.grabbing{cursor:grabbing}
+#wheel.hub-hover{cursor:pointer}
 .bar{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center}
+.bar.sub{gap:8px; min-height:36px}
 button{font:inherit; cursor:pointer; border:0; -webkit-tap-highlight-color:transparent}
 .btn{
   font-family:var(--display); font-size:clamp(18px,3vw,26px); letter-spacing:.04em; color:var(--ink);
   background:linear-gradient(#fff36b, var(--gold) 45%, var(--gold-deep)); padding:12px 28px 8px;
   border-radius:999px; box-shadow:0 5px 0 var(--ink), 0 10px 20px rgba(0,0,0,.3);
-  border:3px solid var(--ink); transition:transform .08s;
+  border:3px solid var(--ink); transition:transform .08s, filter .15s;
 }
+.btn:hover:not(:disabled){filter:brightness(1.05)}
 .btn:active{transform:translateY(4px); box-shadow:0 1px 0 var(--ink)}
 .btn:disabled{filter:grayscale(.7) brightness(.85); cursor:default}
 .icon{
-  width:52px; height:52px; border-radius:50%; background:var(--white); color:var(--ink);
+  width:50px; height:50px; border-radius:50%; background:var(--white); color:var(--ink);
   border:3px solid var(--ink); box-shadow:0 4px 0 var(--ink); display:grid; place-items:center;
-  font-size:22px; position:relative;
+  font-size:21px; position:relative; transition:transform .08s, background-color .15s;
 }
+.icon:hover{background:#fff8d6}
 .icon.off::after{content:""; position:absolute; width:60%; height:4px; background:var(--red); border-radius:2px; transform:rotate(-45deg)}
 .icon:active{transform:translateY(3px); box-shadow:0 1px 0 var(--ink)}
-.reset{font-family:var(--body); font-weight:900; font-size:14px; color:var(--white); background:rgba(10,31,77,.6); padding:10px 16px; border-radius:999px; border:2px solid rgba(255,255,255,.5)}
+.icon .badge{
+  position:absolute; top:-6px; right:-6px; min-width:20px; height:20px; padding:0 5px; box-sizing:border-box;
+  border-radius:999px; background:var(--gold); color:var(--ink); border:2px solid var(--ink);
+  font-family:var(--body); font-weight:900; font-size:11px; line-height:16px; text-align:center;
+}
+.reset{font-family:var(--body); font-weight:900; font-size:14px; color:var(--white); background:rgba(10,31,77,.65); padding:9px 15px; border-radius:999px; border:2px solid rgba(255,255,255,.5); transition:background-color .15s, transform .08s}
+.reset:hover{background:rgba(10,31,77,.85)}
+.reset:active{transform:translateY(2px)}
 button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
-.speed{font-family:var(--display); font-size:15px; letter-spacing:.06em; min-width:150px; text-align:center; color:var(--white); text-shadow:0 2px 0 var(--ink)}
+.speed-pill{
+  position:relative; overflow:hidden; min-width:154px; padding:6px 14px; border-radius:999px;
+  background:rgba(10,31,77,.62); border:2px solid rgba(255,255,255,.35); text-align:center;
+}
+.speed-pill .fill{
+  position:absolute; inset:0 auto 0 0; width:0%; background:linear-gradient(90deg, #3a9cff, #ffcc1a 65%, #ff4747);
+  opacity:.72; transition:width .08s linear; pointer-events:none;
+}
+.speed{position:relative; font-family:var(--display); font-size:14px; letter-spacing:.06em; color:var(--white); text-shadow:0 2px 0 var(--ink)}
+.history{display:flex; align-items:center; gap:5px}
+.history[hidden]{display:none!important}
+.history button{
+  width:32px; height:32px; padding:0; border-radius:50%; border:2px solid var(--gold);
+  box-shadow:0 2px 0 var(--ink); overflow:hidden; background:#fff; transition:transform .12s;
+}
+.history button.sp{border-color:#d580ff; box-shadow:0 0 8px rgba(190,120,255,.8), 0 2px 0 var(--ink)}
+.history button:hover{transform:scale(1.14) translateY(-2px)}
+.history img{width:100%; height:100%; object-fit:cover; display:block}
 .toast{
   position:absolute; left:50%; top:12%; transform:translate(-50%,-10px); opacity:0; pointer-events:none;
   font-family:var(--display); font-size:clamp(20px,4vw,34px); color:var(--gold); -webkit-text-stroke:1.5px var(--ink);
   paint-order:stroke fill; text-shadow:0 3px 0 var(--ink); transition:opacity .25s, transform .25s; white-space:nowrap
 }
 .toast.show{opacity:1; transform:translate(-50%,0)}
-/* Écran titre et résultat */
-.overlay{position:fixed; inset:0; display:grid; place-items:center; background:rgba(6,24,66,.72); z-index:20; padding:16px}
-.overlay[hidden]{display:none!important}
-.start{
-  text-align:center; display:flex; flex-direction:column; gap:18px; align-items:center
+/* Dialogs natifs (top-layer avec light-dismiss et transitions entrée/sortie) */
+dialog.modal{
+  margin:auto; padding:0; border:0; background:transparent; color:var(--white);
+  max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px); overflow:visible;
+  opacity:0;
+  transition-property:opacity, transform, display, overlay;
+  transition-duration:.24s;
+  transition-timing-function:cubic-bezier(.2,1.25,.4,1);
+  transition-behavior:allow-discrete;
 }
-.start .big{font-family:var(--display); font-size:clamp(34px,8vw,72px); color:var(--gold); -webkit-text-stroke:2px var(--ink); paint-order:stroke fill; text-shadow:0 5px 0 var(--ink); line-height:1}
-.start p{margin:0; font-weight:700; max-width:34ch; font-size:17px}
+@media (prefers-reduced-motion: no-preference){
+  dialog.modal{transform:scale(.88) translateY(10px)}
+}
+dialog.modal::backdrop{
+  background-color:rgba(6,24,66,0);
+  backdrop-filter:blur(0px);
+  transition-property:background-color, backdrop-filter, display, overlay;
+  transition-duration:.24s;
+  transition-timing-function:ease-out;
+  transition-behavior:allow-discrete;
+}
+dialog.modal[open]:where(:not([data-closing])){
+  opacity:1;
+  @starting-style{opacity:0}
+  @media (prefers-reduced-motion: no-preference){
+    transform:scale(1) translateY(0);
+    @starting-style{transform:scale(.88) translateY(10px)}
+  }
+}
+dialog.modal[open]:where(:not([data-closing]))::backdrop{
+  background-color:rgba(6,24,66,.72);
+  backdrop-filter:blur(4px);
+  @starting-style{background-color:rgba(6,24,66,0); backdrop-filter:blur(0px)}
+}
+#resultScreen.special[open]:where(:not([data-closing]))::backdrop{
+  background:radial-gradient(circle at 50% 45%, var(--tint), rgba(6,10,40,.9) 70%);
+}
+@media (prefers-reduced-motion: reduce){
+  dialog.modal, dialog.modal::backdrop{transition-duration:.1s}
+}
 .result{
-  width:min(380px, 100%); background:linear-gradient(var(--sky-2), var(--sky-deep)); border:4px solid var(--gold);
-  border-radius:22px; box-shadow:0 0 0 4px var(--ink), 0 20px 50px rgba(0,0,0,.5); padding:18px; text-align:center;
-  display:flex; flex-direction:column; gap:12px; align-items:center; animation:pop .45s cubic-bezier(.2,1.6,.4,1)
+  position:relative; width:min(390px, calc(100vw - 32px)); background:linear-gradient(var(--sky-2), var(--sky-deep)); border:4px solid var(--gold);
+  border-radius:22px; box-shadow:0 0 0 4px var(--ink), 0 20px 50px rgba(0,0,0,.5); padding:18px; box-sizing:border-box; text-align:center;
+  display:flex; flex-direction:column; gap:10px; align-items:center;
 }
-@keyframes pop{from{transform:scale(.4) rotate(-8deg); opacity:0} to{transform:none; opacity:1}}
-.result .label{font-family:var(--display); font-size:22px; color:var(--gold); letter-spacing:.05em; -webkit-text-stroke:1px var(--ink); paint-order:stroke fill}
-.result img{width:min(260px,70vw); max-width:100%; border-radius:12px; box-shadow:0 6px 0 var(--ink)}
-.result .name{font-family:var(--display); font-size:34px; line-height:1}
-.result .sub{font-weight:700; opacity:.9; margin-top:-6px}
-.result .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
-#fx{position:fixed; inset:0; pointer-events:none; z-index:30}
+.close-x{
+  position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:50%;
+  background:rgba(10,31,77,.7); color:var(--white); border:2px solid rgba(255,255,255,.55);
+  font-weight:900; font-size:16px; display:grid; place-items:center; transition:transform .1s, background-color .15s;
+}
+.close-x:hover{background:var(--red); border-color:var(--white)}
+.close-x:active{transform:scale(.92)}
+.new-badge{
+  position:absolute; top:-12px; left:14px; padding:4px 12px; border-radius:999px;
+  background:linear-gradient(#ff6b6b, var(--red)); color:#fff; border:2px solid var(--ink);
+  font-family:var(--display); font-size:15px; letter-spacing:.06em; box-shadow:0 3px 0 var(--ink);
+  transform:rotate(-5deg);
+}
+.new-badge[hidden]{display:none!important}
+.result .label{font-family:var(--display); font-size:22px; color:var(--gold); letter-spacing:.05em; -webkit-text-stroke:1px var(--ink); paint-order:stroke fill; padding-inline:28px}
+.card-stage{position:relative; display:flex; align-items:center; justify-content:center; gap:8px; width:100%}
+.nav-arrow{
+  width:38px; height:38px; flex:none; border-radius:50%; background:rgba(10,31,77,.75); color:var(--white);
+  border:2px solid rgba(255,255,255,.65); font-size:22px; font-weight:900; display:grid; place-items:center;
+  box-shadow:0 3px 0 var(--ink); transition:transform .1s, background-color .15s;
+}
+.nav-arrow:hover{background:var(--gold); color:var(--ink)}
+.nav-arrow:active{transform:translateY(2px)}
+.nav-arrow[hidden]{display:none!important}
+.result img{width:min(246px,66vw); max-width:100%; border-radius:12px; box-shadow:0 6px 0 var(--ink); display:block}
+.result .name{font-family:var(--display); font-size:32px; line-height:1}
+.result .sub{font-weight:700; opacity:.92; margin-top:-4px; font-size:15px}
+.result .meta{font-weight:900; font-size:12.5px; color:var(--gold); background:rgba(10,31,77,.45); padding:3px 10px; border-radius:999px}
+.result .meta:empty{display:none}
+.result .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:2px}
+#fx{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:30; border:0; margin:0; padding:0; background:transparent}
+#fx[popover]{overflow:visible}
+#fx::backdrop{display:none}
 /* Victoire d'un personnage spécial — couleurs données par le pouvoir (--c1..--c3, --flash, --glow, --tint) */
 .burst{position:fixed; inset:0; z-index:25; pointer-events:none; display:grid; place-items:center; overflow:hidden;
   --c1:#fff; --c2:#ffd21a; --c3:#ff9f00; --flash:#fff; --glow:rgba(255,210,26,.9); --tint:rgba(0,0,0,.4)}
@@ -128,26 +227,43 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97) 2}
 @keyframes shake{10%,90%{transform:translate(-2px,1px)} 20%,80%{transform:translate(5px,-3px)} 30%,50%,70%{transform:translate(-8px,4px)} 40%,60%{transform:translate(8px,-4px)}}
 /* Carte résultat d'un personnage spécial */
-#resultScreen.special{background:radial-gradient(circle at 50% 45%, var(--tint), rgba(6,10,40,.9) 70%)}
 #resultScreen.special .result{position:relative; border-color:transparent; isolation:isolate;
   background:linear-gradient(var(--card1), var(--card2)) padding-box, conic-gradient(from var(--a,0deg), var(--c1), var(--c2), var(--c3), var(--c2), var(--c1)) border-box;
-  animation:pop .45s cubic-bezier(.2,1.6,.4,1), hue 2s linear infinite; box-shadow:0 0 0 4px var(--ink), 0 0 50px 10px var(--glow), 0 20px 50px rgba(0,0,0,.5)}
+  box-shadow:0 0 0 4px var(--ink), 0 0 50px 10px var(--glow), 0 20px 50px rgba(0,0,0,.5)}
 #resultScreen[data-power="prism"] .result{background:linear-gradient(var(--card1), var(--card2)) padding-box, conic-gradient(from var(--a,0deg), #ff4d6d, #ffd23a, #5cff8a, #3ad0ff, #b45cff, #ff4d6d) border-box}
 @property --a{syntax:"<angle>"; inherits:false; initial-value:0deg}
 @keyframes hue{to{--a:360deg}}
 #resultScreen.special .label{font-size:24px; background-image:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c2),var(--c1)); background-size:200% 100%;
-  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:1px var(--ink); animation:rainbow 1.2s linear infinite}
-#resultScreen.special .cardwrap{position:relative; border-radius:12px; overflow:hidden; animation:glow 1.2s ease-in-out infinite alternate}
-#resultScreen.special .cardwrap::after{content:""; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(110deg, transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%); background-size:250% 100%; animation:shine 2.2s ease-in-out infinite}
-@keyframes shine{from{background-position:150% 0} to{background-position:-100% 0}}
-@keyframes glow{from{filter:drop-shadow(0 0 6px rgba(255,255,255,.6))} to{filter:drop-shadow(0 0 22px var(--glow))}}
-.cardwrap{display:block; line-height:0}
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:1px var(--ink)}
+.cardwrap{position:relative; display:block; line-height:0; border-radius:12px; transform-style:preserve-3d; transition:transform .14s ease-out}
+.card-glow{display:none}
+#resultScreen.special .card-glow{
+  display:block; position:absolute; inset:-8px; z-index:0; border-radius:18px; pointer-events:none;
+  background:var(--glow); filter:blur(16px); opacity:.55; will-change:opacity, transform;
+}
+.card-face{position:relative; z-index:1; display:block; border-radius:12px; overflow:hidden; box-shadow:0 6px 0 var(--ink)}
+.card-face::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .2s;
+  background:radial-gradient(circle at var(--sx,50%) var(--sy,50%), rgba(255,255,255,.35), transparent 60%);
+}
+.cardwrap.tilting .card-face::before{opacity:1}
+#resultScreen.special .card-face::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.75) 50%, transparent 70%);
+  transform:translateX(-120%); will-change:transform}
+@keyframes shine{0%{transform:translateX(-120%)} 60%,100%{transform:translateX(120%)}}
+@keyframes glow{0%,100%{opacity:.35; transform:scale(.96)} 50%{opacity:.95; transform:scale(1.04)}}
+@media (prefers-reduced-motion: no-preference){
+  #resultScreen.special .result{animation:hue 2s linear infinite}
+  #resultScreen.special .label{animation:rainbow 1.2s linear infinite}
+  #resultScreen.special .card-glow{animation:glow 2.4s ease-in-out infinite}
+  #resultScreen.special .card-face::after{animation:shine 2.2s ease-in-out infinite}
+  .cardwrap.tilting{transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(1.02)}
+}
 #resultScreen.special .name{background:linear-gradient(#fff,#ffe36b); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 3px 0 var(--ink))}
 /* Écran d'accueil */
 .home{
   position:fixed; inset:0; z-index:15; overflow-y:auto; overflow-x:hidden;
-  display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:clamp(12px,2.6vh,26px);
+  display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:clamp(12px,2.6vh,24px);
   padding:max(16px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-right,0px)) max(16px, env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px));
   box-sizing:border-box;
   background-color:var(--sky-deep);
@@ -161,12 +277,16 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .logo .l1{display:block; font-family:var(--display); font-weight:400; font-size:clamp(22px,4.5vw,38px); color:var(--white);
   -webkit-text-stroke:2px var(--ink); paint-order:stroke fill; text-shadow:0 4px 0 var(--ink); letter-spacing:.08em}
 .logo .l2{display:block; margin-top:.32em; font-family:var(--display); font-weight:400; font-size:clamp(48px,12vw,112px); color:var(--gold);
-  -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; text-shadow:0 6px 0 var(--ink), 0 14px 30px rgba(0,0,0,.45);
-  animation:bob 2.4s ease-in-out infinite}
+  -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; text-shadow:0 6px 0 var(--ink), 0 14px 30px rgba(0,0,0,.45)}
 @keyframes bob{50%{transform:translateY(-6px) rotate(-1deg)}}
 .strip{width:100vw; overflow:hidden; mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.strip .track{display:flex; gap:14px; width:max-content; animation:scroll 40s linear infinite}
-.strip.rev .track{animation-direction:reverse; animation-duration:26s}
+.strip .track{display:flex; gap:14px; width:max-content}
+@media (prefers-reduced-motion: no-preference){
+  .logo .l2{animation:bob 2.4s ease-in-out infinite}
+  .strip .track{animation:scroll 40s linear infinite}
+  .strip.rev .track{animation-direction:reverse; animation-duration:26s}
+}
+.home.paused .strip .track, .home.paused .logo .l2{animation-play-state:paused}
 @keyframes scroll{to{transform:translateX(-50%)}}
 .strip img{width:clamp(56px,9vw,84px); aspect-ratio:1; border-radius:50%; border:4px solid var(--gold); box-shadow:0 0 0 3px var(--ink), 0 6px 12px rgba(0,0,0,.35); background:#fff}
 .strip.rev img{border-color:#fff; box-shadow:0 0 0 3px var(--ink), 0 0 18px 4px rgba(190,120,255,.85)}
@@ -174,8 +294,9 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .mode{
   width:clamp(100px,24vw,170px); padding:12px 10px 10px; border-radius:18px; color:var(--white);
   background:linear-gradient(rgba(58,156,255,.95), rgba(11,60,140,.95)); border:3px solid var(--ink);
-  box-shadow:0 5px 0 var(--ink); display:flex; flex-direction:column; align-items:center; gap:6px; transition:transform .1s;
+  box-shadow:0 5px 0 var(--ink); display:flex; flex-direction:column; align-items:center; gap:6px; transition:transform .12s, box-shadow .12s;
 }
+.mode:hover:not([aria-pressed="true"]){transform:translateY(-2px)}
 .mode .faces{display:flex; max-width:100%}
 .mode .faces img{width:34px; height:34px; border-radius:50%; border:2px solid var(--ink); margin-left:-10px; background:#fff}
 .mode .faces img:first-child{margin-left:0}
@@ -184,39 +305,72 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .mode[aria-pressed="true"]{background:linear-gradient(#fff36b, var(--gold) 45%, var(--gold-deep)); color:var(--ink); transform:translateY(-4px); box-shadow:0 9px 0 var(--ink), 0 0 0 4px var(--white)}
 .mode[aria-pressed="true"] b{text-shadow:none}
 .mode.special:not([aria-pressed="true"]){background:linear-gradient(#a24be8, #3b0f73)}
-.home .actions{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center}
+.home .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center}
 .btn.huge{font-size:clamp(28px,5vw,40px); padding:16px 48px 10px}
 /* Collection */
-.gallery{width:min(920px,100%); max-height:100%; overflow:auto; background:linear-gradient(var(--sky-2), var(--sky-deep));
-  border:4px solid var(--gold); border-radius:22px; box-shadow:0 0 0 4px var(--ink), 0 20px 50px rgba(0,0,0,.5); padding:16px; box-sizing:border-box}
-.gallery header{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
+.gallery{
+  width:min(920px, calc(100vw - 24px)); max-height:calc(100dvh - 32px); overflow:auto;
+  background:linear-gradient(var(--sky-2), var(--sky-deep));
+  border:4px solid var(--gold); border-radius:22px; box-shadow:0 0 0 4px var(--ink), 0 20px 50px rgba(0,0,0,.5);
+  padding:16px; box-sizing:border-box;
+}
+.gallery header{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px}
+.gallery .gal-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
 .gallery h2{margin:0; font-family:var(--display); font-weight:400; font-size:28px; color:var(--gold); -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill}
+.gal-prog{display:flex; align-items:center; gap:8px; font-weight:900; font-size:13px; background:rgba(10,31,77,.5); padding:5px 11px; border-radius:999px; border:2px solid rgba(255,255,255,.35)}
+.gal-bar{width:76px; height:8px; border-radius:999px; background:rgba(255,255,255,.22); overflow:hidden}
+.gal-bar i{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--gold), #fff36b); border-radius:999px; transition:width .3s ease}
+.filters{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px}
+.chip{
+  font-family:var(--body); font-weight:900; font-size:13px; color:var(--white);
+  background:rgba(10,31,77,.55); padding:6px 12px; border-radius:999px; border:2px solid rgba(255,255,255,.35);
+  transition:background-color .12s, color .12s, transform .08s;
+}
+.chip[aria-pressed="true"]{background:var(--gold); color:var(--ink); border-color:var(--ink)}
 .gallery h3{margin:14px 0 8px; font-family:var(--display); font-weight:400; font-size:20px; letter-spacing:.04em}
+.gallery h3[hidden], .grid[hidden]{display:none!important}
+.gal-empty{text-align:center; padding:26px 12px; font-weight:700; opacity:.9; margin:0}
+.gal-empty[hidden]{display:none!important}
 .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(118px,1fr)); gap:10px}
-.grid button{padding:0; background:none; border-radius:10px; overflow:hidden; box-shadow:0 4px 0 var(--ink); transition:transform .1s}
+.grid button{position:relative; padding:0; background:none; border-radius:10px; overflow:hidden; box-shadow:0 4px 0 var(--ink); transition:transform .12s, filter .15s}
 .grid button:hover{transform:translateY(-3px)}
+.grid button.unseen img{filter:saturate(.65) brightness(.85)}
+.grid button.unseen:hover img{filter:none}
+.grid .found-tag{
+  position:absolute; top:5px; right:5px; padding:2px 6px; border-radius:999px;
+  background:var(--gold); color:var(--ink); border:2px solid var(--ink);
+  font-weight:900; font-size:11px; line-height:1.1; box-shadow:0 2px 0 rgba(10,31,77,.6);
+}
 .grid img{display:block; width:100%; aspect-ratio:3/4.2; object-fit:contain; background:var(--ink)}
-@media (max-width:520px){ .mode .faces img{width:24px; height:24px; margin-left:-9px} .mode{width:min(30vw,130px); padding-inline:6px} }
-
-@media (prefers-reduced-motion: reduce){ .result, #resultScreen.special .result{animation:none} .toast{transition:none}
-  #resultScreen.special .label, #resultScreen.special .cardwrap, #resultScreen.special .cardwrap::after{animation:none} }
+@media (max-width:520px){
+  .mode .faces img{width:24px; height:24px; margin-left:-9px}
+  .mode{width:min(30vw,130px); padding-inline:6px}
+  .icon{width:44px; height:44px; font-size:19px}
+  .btn{padding:10px 22px 7px}
+}
+@media (prefers-reduced-motion: reduce){ .toast{transition:none} }
 </style>
 
 <div class="app">
   <h1>La Roue <span>des Héros</span></h1>
-  <p class="hint">Attrape la roue et lance-la avec ton doigt, la souris ou le Pencil&nbsp;!</p>
+  <div class="ticker idle" id="ticker" aria-live="off">
+    <img id="tickerImg" alt="">
+    <span class="tname" id="tickerName">Attrape la roue, lance-la ou appuie sur GO!</span>
+  </div>
   <div class="stage" id="stage">
     <canvas id="wheel" aria-label="Roue des personnages" role="img"></canvas>
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
   <div class="bar">
     <button class="icon" id="homeBtn" aria-label="Accueil" title="Accueil">⌂</button>
-    <button class="icon" id="musicBtn" aria-label="Musique" title="Musique">♪</button>
-    <button class="btn" id="spinBtn">LANCER&nbsp;!</button>
-    <button class="icon" id="sfxBtn" aria-label="Bruitages" title="Bruitages">🔊</button>
+    <button class="icon" id="gameGalBtn" aria-label="Collection" title="Collection (C)">★<span class="badge" id="galBadge" hidden>0</span></button>
+    <button class="btn" id="spinBtn" title="Lancer la roue (Espace)">LANCER&nbsp;!</button>
+    <button class="icon" id="musicBtn" aria-label="Musique" aria-pressed="true" title="Musique (M)">♪</button>
+    <button class="icon" id="sfxBtn" aria-label="Bruitages" aria-pressed="true" title="Bruitages (S)">🔊</button>
   </div>
-  <div class="bar">
-    <div class="speed" id="speed">VITESSE 0 TR/MIN</div>
+  <div class="bar sub">
+    <div class="speed-pill"><div class="fill" id="speedFill"></div><div class="speed" id="speed">VITESSE 0 TR/MIN</div></div>
+    <div class="history" id="history" aria-label="Derniers tirages" hidden></div>
     <button class="reset" id="resetBtn" hidden>Remettre tout le monde</button>
   </div>
 </div>
@@ -235,29 +389,50 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
   </div>
   <div class="actions">
     <button class="reset" id="galleryBtn">Voir la collection</button>
+    <button class="reset" id="pauseStripBtn">Pause défilement</button>
   </div>
 </section>
 
-<div class="overlay" id="galleryScreen" hidden>
-  <div class="gallery" role="dialog" aria-labelledby="galTitle">
-    <header><h2 id="galTitle">Collection</h2><button class="reset" id="galClose">Fermer ✕</button></header>
-    <h3>Personnages spéciaux</h3><div class="grid" data-grid="special"></div>
-    <h3>Héros</h3><div class="grid" data-grid="classic"></div>
+<dialog class="modal" id="galleryScreen" closedby="any" aria-labelledby="galTitle">
+  <div class="gallery">
+    <header>
+      <div class="gal-head">
+        <h2 id="galTitle">Collection</h2>
+        <div class="gal-prog"><span id="galProgText">0 / 0</span><span class="gal-bar"><i id="galProgBar"></i></span></div>
+      </div>
+      <button class="reset" id="galClose">Fermer ✕</button>
+    </header>
+    <div class="filters" role="group" aria-label="Filtrer la collection">
+      <button class="chip" data-filter="all" aria-pressed="true">Tous</button>
+      <button class="chip" data-filter="found" aria-pressed="false">Obtenus</button>
+      <button class="chip" data-filter="special" aria-pressed="false">Spéciaux</button>
+      <button class="chip" data-filter="classic" aria-pressed="false">Héros</button>
+    </div>
+    <p class="gal-empty" id="galEmpty" hidden>Lance la roue pour débloquer tes premiers personnages&nbsp;!</p>
+    <h3 id="galSpecialH">Personnages spéciaux</h3><div class="grid" data-grid="special"></div>
+    <h3 id="galClassicH">Héros</h3><div class="grid" data-grid="classic"></div>
   </div>
-</div>
+</dialog>
 
-<div class="overlay" id="resultScreen" hidden>
-  <div class="result" role="dialog" aria-labelledby="resName">
+<dialog class="modal" id="resultScreen" closedby="any" aria-labelledby="resName">
+  <div class="result">
+    <span class="new-badge" id="resNew" hidden>NOUVEAU&nbsp;!</span>
+    <button class="close-x" id="resClose" aria-label="Fermer">✕</button>
     <div class="label" id="resLabel">Tu es tombé sur…</div>
-    <span class="cardwrap"><img id="resImg" alt=""></span>
+    <div class="card-stage">
+      <button class="nav-arrow" id="prevCardBtn" aria-label="Carte précédente" hidden>‹</button>
+      <span class="cardwrap" id="cardWrap"><span class="card-glow" aria-hidden="true"></span><span class="card-face"><img id="resImg" alt=""></span></span>
+      <button class="nav-arrow" id="nextCardBtn" aria-label="Carte suivante" hidden>›</button>
+    </div>
     <div class="name" id="resName"></div>
     <div class="sub" id="resSub"></div>
+    <div class="meta" id="resMeta"></div>
     <div class="row">
-      <button class="btn" id="againBtn">REJOUER</button>
+      <button class="btn" id="againBtn">RELANCER&nbsp;!</button>
       <button class="reset" id="removeBtn">Retirer de la roue</button>
     </div>
   </div>
-</div>
+</dialog>
 
 <div class="burst" id="burst" hidden aria-hidden="true">
   <div class="rays"></div>
@@ -269,6 +444,7 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 
 <script>
 const ALL_CHARS = /*CHARS*/[];
+const MUSIC_SRC = /*MUSIC*/"";
 (() => {
 "use strict";
 const TAU = Math.PI * 2;
@@ -278,21 +454,81 @@ const stage = $("stage");
 
 /* ---------- État ---------- */
 let mode = "all";
+let found = {};
 try { mode = localStorage.getItem("roue-mode") || "all"; } catch(_){}
+try { found = JSON.parse(localStorage.getItem("roue-found") || "{}") || {}; } catch(_){}
+const saveFound = () => { try { localStorage.setItem("roue-found", JSON.stringify(found)); } catch(_){} };
 const pool = () => ALL_CHARS.filter(c => mode === "all" || (c.group || "classic") === mode);
 let chars = pool();
-let viewing = false; // résultat ouvert depuis la collection
+let viewing = false; // résultat ouvert depuis la collection ou l'historique
+let viewList = [], viewIdx = 0;
+let history = [];
+let galFilter = "all";
 let theta = 0;          // angle de la roue (rad)
 let omega = 0;          // vitesse angulaire (rad/s)
 let launched = false;   // un vrai lancer est en cours
 let dragging = false, dragId = null, lastAng = 0, samples = [], down = null;
 let flap = 0, flapV = 0;  // languette du pointeur
-let lastSeg = 0, lastTickT = 0;
+let lastSeg = 0, lastTickT = 0, lastVibeT = 0;
 let winner = -1, winPulse = 0;
+let hubScale = 1, hubPress = false, idleT = 0;
+let tickerActive = false, lastTickerId = "";
 let size = 400, dpr = 1, cx = 0, cy = 0, Ro = 0, Rw = 0;
 const off = document.createElement("canvas");
 const shadowCv = document.createElement("canvas"); // ombre portée, calculée une fois par taille
 const faces = [];
+const vibe = pat => { try { if (navigator.vibrate) navigator.vibrate(pat); } catch(_){} };
+
+/* ---------- Dialogs natifs (top-layer + fallbacks Safari/Firefox) ---------- */
+let supportsDisplayTransition;
+function canTransitionDisplay(){
+  if (supportsDisplayTransition !== undefined) return supportsDisplayTransition;
+  if (!window.CSS?.supports?.("transition-behavior", "allow-discrete") || !document.body) return false;
+  const probe = document.createElement("div");
+  probe.style.cssText = "transition: display 1s allow-discrete !important; display: block;";
+  document.body.appendChild(probe);
+  getComputedStyle(probe).display;
+  probe.style.display = "none";
+  supportsDisplayTransition = getComputedStyle(probe).display === "block";
+  probe.remove();
+  return supportsDisplayTransition;
+}
+function supportsTopLayerExit(){
+  return Boolean(window.CSS?.supports?.("overlay", "auto") && canTransitionDisplay());
+}
+function openDialog(dlg){
+  if (!dlg) return;
+  dlg.removeAttribute("data-closing");
+  if (!dlg.open) dlg.showModal();
+}
+async function closeTopLayer(dlg){
+  if (!dlg || !dlg.open) return;
+  if (!supportsTopLayerExit()){
+    dlg.setAttribute("data-closing", "");
+    const anims = dlg.getAnimations({ subtree: true });
+    if (anims.length > 0){
+      await Promise.race([
+        Promise.allSettled(anims.map(a => a.finished)),
+        new Promise(r => setTimeout(r, 500)),
+      ]);
+    }
+    if (!dlg.hasAttribute("data-closing")) return;
+    dlg.removeAttribute("data-closing");
+  }
+  if (dlg.open) dlg.close();
+}
+function setupDialog(dlg, onClosed){
+  dlg.addEventListener("cancel", e => { e.preventDefault(); closeTopLayer(dlg); });
+  if (!("closedBy" in HTMLDialogElement.prototype)){
+    dlg.addEventListener("click", e => {
+      if (e.target !== dlg) return;
+      const r = dlg.getBoundingClientRect();
+      const inside = r.top <= e.clientY && e.clientY <= r.bottom && r.left <= e.clientX && e.clientX <= r.right;
+      if (!inside) closeTopLayer(dlg);
+    });
+  }
+  if (onClosed) dlg.addEventListener("close", onClosed);
+}
 
 /* ---------- Physique ---------- */
 const K = 0.30;      // frottement proportionnel
@@ -403,21 +639,33 @@ function renderWheel(){
 
 function drawHub(){
   const r = Rw * 0.2;
+  const idlePulse = (!launched && !dragging && omega === 0 && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+    ? 1 + 0.035 * Math.sin(idleT * 3.4) : 1;
+  const sc = hubScale * idlePulse;
   ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(sc, sc);
+  if (!launched && !dragging && omega === 0){
+    const halo = 0.28 + 0.22 * Math.sin(idleT * 3.4);
+    ctx.beginPath(); ctx.arc(0, 0, r * 1.16, 0, TAU);
+    ctx.strokeStyle = `rgba(255, 232, 107, ${halo})`;
+    ctx.lineWidth = r * 0.1; ctx.stroke();
+  }
   ctx.shadowColor = "rgba(0,0,0,.4)"; ctx.shadowBlur = r*0.3; ctx.shadowOffsetY = r*0.08;
-  const ring = ctx.createRadialGradient(cx-r*.3,cy-r*.4,r*.1,cx,cy,r);
+  const ring = ctx.createRadialGradient(-r*.3,-r*.4,r*.1,0,0,r);
   ring.addColorStop(0,"#fff6b0"); ring.addColorStop(.5,"#ffc21a"); ring.addColorStop(1,"#b06a00");
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,TAU); ctx.fillStyle = ring; ctx.fill();
-  ctx.restore();
-  ctx.lineWidth = r*0.06; ctx.strokeStyle = "#0a1f4d"; ctx.beginPath(); ctx.arc(cx,cy,r,0,TAU); ctx.stroke();
-  const inner = ctx.createRadialGradient(cx,cy-r*.3,r*.05,cx,cy,r*0.74);
+  ctx.beginPath(); ctx.arc(0,0,r,0,TAU); ctx.fillStyle = ring; ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = r*0.06; ctx.strokeStyle = "#0a1f4d"; ctx.beginPath(); ctx.arc(0,0,r,0,TAU); ctx.stroke();
+  const inner = ctx.createRadialGradient(0,-r*.3,r*.05,0,0,r*0.74);
   inner.addColorStop(0,"#5fb4ff"); inner.addColorStop(1,"#0b3c8c");
-  ctx.beginPath(); ctx.arc(cx,cy,r*0.74,0,TAU); ctx.fillStyle = inner; ctx.fill();
+  ctx.beginPath(); ctx.arc(0,0,r*0.74,0,TAU); ctx.fillStyle = inner; ctx.fill();
   ctx.lineWidth = r*0.05; ctx.stroke();
   const fam = getComputedStyle(document.documentElement).getPropertyValue("--display");
   ctx.font = `${r*0.5}px ${fam}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.lineJoin = "round"; ctx.lineWidth = r*0.14; ctx.strokeStyle = "#0a1f4d"; ctx.strokeText("GO!", cx, cy + r*0.05);
-  ctx.fillStyle = "#ffcc1a"; ctx.fillText("GO!", cx, cy + r*0.05);
+  ctx.lineJoin = "round"; ctx.lineWidth = r*0.14; ctx.strokeStyle = "#0a1f4d"; ctx.strokeText("GO!", 0, r*0.05);
+  ctx.fillStyle = "#ffcc1a"; ctx.fillText("GO!", 0, r*0.05);
+  ctx.restore();
 }
 
 function drawPointer(){
@@ -445,6 +693,16 @@ function draw(){
   ctx.clearRect(0,0,D,D);
   // ombre portée de la roue
   ctx.drawImage(shadowCv, cx - shadowCv.width/2, cy + Ro*0.03 - shadowCv.height/2);
+  // aura de vitesse à haute rotation
+  const fast = Math.max(0, (Math.abs(omega) - 18) / (MAX_W - 18));
+  if (fast > 0.02){
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, Ro * 1.025, 0, TAU);
+    ctx.strokeStyle = `rgba(255, 224, 90, ${fast * 0.65})`;
+    ctx.lineWidth = Ro * (0.02 + fast * 0.025);
+    ctx.stroke();
+    ctx.restore();
+  }
   ctx.save(); ctx.translate(cx,cy); ctx.rotate(theta);
   ctx.drawImage(off, -off.width/2, -off.height/2);
   if (winner >= 0 && winner < chars.length){
@@ -462,6 +720,9 @@ function draw(){
 let lastT = performance.now();
 function frame(t){
   const dt = Math.min(0.05, (t - lastT)/1000); lastT = t;
+  idleT += dt;
+  const targetHub = hubPress ? 0.9 : 1;
+  hubScale += (targetHub - hubScale) * Math.min(1, dt * 18);
   if (!dragging && omega !== 0){
     const dec = (K*Math.abs(omega) + C) * dt;
     if (Math.abs(omega) <= dec){ omega = 0; onStop(); }
@@ -473,6 +734,7 @@ function frame(t){
   flap = Math.max(-0.7, Math.min(0.7, flap));
   if (winner >= 0) winPulse += dt*5;
   updateSpeed();
+  updateTicker();
   audio.setSpinLevel(Math.abs(dragging ? dragW : omega));
   draw();
   requestAnimationFrame(frame);
@@ -486,6 +748,7 @@ function checkTicks(t){
     lastSeg = s;
     flapV += -dir * 22;
     if (t - lastTickT > 38){ lastTickT = t; audio.tick(Math.abs(dragging ? dragW : omega)); }
+    if (t - lastVibeT > 60 && (dragging || omega !== 0)){ lastVibeT = t; vibe(4); }
   }
 }
 
@@ -493,7 +756,30 @@ let speedShown = -1;
 function updateSpeed(){
   const w = Math.abs(dragging ? dragW : omega);
   const rpm = Math.round(w / TAU * 60);
-  if (rpm !== speedShown){ speedShown = rpm; $("speed").textContent = `VITESSE ${rpm} TR/MIN`; }
+  if (rpm !== speedShown){
+    speedShown = rpm;
+    $("speed").textContent = `VITESSE ${rpm} TR/MIN`;
+    $("speedFill").style.width = Math.min(100, Math.round((w / MAX_W) * 100)) + "%";
+  }
+}
+function updateTicker(force){
+  if (!tickerActive && !dragging && omega === 0) return;
+  tickerActive = true;
+  const ch = chars[currentIndex()];
+  if (!ch) return;
+  if (!force && ch.id === lastTickerId) return;
+  lastTickerId = ch.id;
+  const el = $("ticker");
+  el.classList.remove("idle");
+  el.classList.toggle("special", ch.group === "special");
+  $("tickerImg").src = ch.face;
+  $("tickerName").textContent = ch.name;
+}
+function resetTicker(){
+  tickerActive = false; lastTickerId = "";
+  const el = $("ticker");
+  el.classList.add("idle"); el.classList.remove("special");
+  $("tickerName").textContent = "Attrape la roue, lance-la ou appuie sur GO!";
 }
 
 /* ---------- Saisie : doigt, souris, Pencil ---------- */
@@ -514,10 +800,19 @@ canvas.addEventListener("pointerdown", e => {
   omega = 0; dragW = 0; launched = false; winner = -1;
   lastAng = Math.atan2(dy,dx);
   samples = [{ t: e.timeStamp, th: theta }];
-  down = { x: p.x, y: p.y, t: e.timeStamp, hub: d < Rw*0.2, moved: 0 };
+  const onHub = d < Rw*0.21;
+  hubPress = onHub;
+  down = { x: p.x, y: p.y, t: e.timeStamp, hub: onHub, moved: 0 };
 });
 canvas.addEventListener("pointermove", e => {
-  if (!dragging || e.pointerId !== dragId) return;
+  if (!dragging){
+    if (e.pointerType === "mouse"){
+      const p = toCanvas(e);
+      canvas.classList.toggle("hub-hover", Math.hypot(p.x - cx, p.y - cy) < Rw*0.21);
+    }
+    return;
+  }
+  if (e.pointerId !== dragId) return;
   const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
   for (const ev of (evs.length ? evs : [e])){
     const p = toCanvas(ev), dx = p.x - cx, dy = p.y - cy;
@@ -527,14 +822,16 @@ canvas.addEventListener("pointermove", e => {
     down.moved = Math.max(down.moved, Math.hypot(p.x - down.x, p.y - down.y));
     samples.push({ t: ev.timeStamp, th: theta });
   }
+  if (down.moved > canvas.width*0.02) hubPress = false;
   const now = e.timeStamp;
   while (samples.length > 2 && now - samples[0].t > 120) samples.shift();
   const s0 = samples[0];
   dragW = now - s0.t > 5 ? (theta - s0.th) / ((now - s0.t)/1000) : 0;
 });
+canvas.addEventListener("pointerleave", () => canvas.classList.remove("hub-hover"));
 function release(e){
   if (!dragging || e.pointerId !== dragId) return;
-  dragging = false; dragId = null; canvas.classList.remove("grabbing");
+  dragging = false; dragId = null; hubPress = false; canvas.classList.remove("grabbing");
   const now = e.timeStamp;
   samples = samples.filter(s => now - s.t <= 100);
   let w = 0;
@@ -560,6 +857,7 @@ function launch(w){
   omega = w; launched = true; winner = -1;
   $("spinBtn").disabled = true;
   audio.whoosh(Math.abs(w)/MAX_W);
+  vibe(14);
   if (Math.abs(w) > MAX_W*0.8) toast("Super vitesse !");
 }
 function randomSpin(){
@@ -567,16 +865,42 @@ function randomSpin(){
   audio.unlock();
   launch((17 + Math.random()*16) * (Math.random() < 0.2 ? -1 : 1));
 }
+function recordWin(ch){
+  const prev = found[ch.id] || 0;
+  found[ch.id] = prev + 1;
+  saveFound();
+  history = [ch, ...history.filter(h => h.id !== ch.id)].slice(0, 5);
+  renderHistory();
+  refreshCollectionUI();
+  return prev === 0;
+}
+function renderHistory(){
+  const box = $("history");
+  box.innerHTML = "";
+  box.hidden = !history.length;
+  history.forEach((ch, idx) => {
+    const b = document.createElement("button");
+    b.className = ch.group === "special" ? "sp" : "";
+    b.title = `Dernier tirage : ${ch.name}`;
+    b.setAttribute("aria-label", `Voir ${ch.name}`);
+    const im = new Image(); im.src = ch.face; im.alt = ""; im.draggable = false;
+    b.appendChild(im);
+    b.addEventListener("click", () => { audio.uiClick(); openCardViewer(history, idx); });
+    box.appendChild(b);
+  });
+}
 function onStop(){
   if (!launched) return;
   launched = false;
   $("spinBtn").disabled = false;
   winner = currentIndex(); winPulse = 0;
   const ch = chars[winner];
-  if (ch.group === "special"){ specialWin(ch); return; }
+  const isNew = recordWin(ch);
+  if (ch.group === "special"){ specialWin(ch, isNew); return; }
   audio.win();
+  vibe([18, 36, 28]);
   confetti();
-  setTimeout(() => showResult(ch), 650);
+  setTimeout(() => showResult(ch, isNew), 650);
 }
 /* Pouvoirs des personnages spéciaux : couleurs, effet visuel et son */
 const POWERS = {
@@ -592,45 +916,118 @@ function applyPower(el, pw){
   [["--c1",pw.c[0]],["--c2",pw.c[1]],["--c3",pw.c[2]],["--flash",pw.flash],["--glow",pw.glow],["--tint",pw.tint],["--card1",pw.card[0]],["--card2",pw.card[1]]]
     .forEach(([k,v]) => el.style.setProperty(k, v));
 }
-function specialWin(ch){
+function specialWin(ch, isNew){
   const pw = powerOf(ch), calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
   audio.superWin(pw.key);
-  if (calm){ setTimeout(() => showResult(ch), 400); return; }
+  vibe([30, 30, 50, 30, 80]);
+  if (calm){ setTimeout(() => showResult(ch, isNew), 400); return; }
   $("burstImg").src = ch.face;
   $("burstName").textContent = pw.name + " !";
   const b = $("burst"); applyPower(b, pw); b.hidden = false;
   b.querySelectorAll(".flash,.hero,.rays").forEach(el => { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
   const app = document.querySelector(".app"); app.classList.remove("shake"); void app.offsetWidth; app.classList.add("shake");
   powerFx(pw);
-  setTimeout(() => { showResult(ch); confetti(pw); }, 1450);
+  setTimeout(() => { showResult(ch, isNew); confetti(pw); }, 1450);
   setTimeout(() => { b.hidden = true; app.classList.remove("shake"); }, 1550);
 }
 
-/* ---------- Résultat ---------- */
-function showResult(ch){
-  viewing = false;
-  $("resLabel").textContent = "Tu es tombé sur…"; $("againBtn").textContent = "REJOUER";
-  $("resImg").src = ch.card; $("resImg").alt = ch.name;
-  $("resName").textContent = ch.name; $("resSub").textContent = ch.sub;
+/* ---------- Résultat & Visionneuse ---------- */
+const resultDlg = $("resultScreen"), galleryDlg = $("galleryScreen");
+function populateCard(ch, opts){
   const sp = ch.group === "special";
-  $("resultScreen").classList.toggle("special", sp);
-  if (sp){ const pw = powerOf(ch); applyPower($("resultScreen"), pw); $("resLabel").textContent = `${pw.icon} ${pw.name} ${pw.icon}`; }
-  $("removeBtn").hidden = chars.length <= 2;
-  $("resultScreen").hidden = false;
+  resultDlg.classList.toggle("special", sp);
+  if (sp){ const pw = powerOf(ch); applyPower(resultDlg, pw); $("resLabel").textContent = `${pw.icon} ${pw.name} ${pw.icon}`; }
+  else { delete resultDlg.dataset.power; $("resLabel").textContent = opts.label; }
+  $("resImg").src = ch.card; $("resImg").alt = ch.name;
+  $("resName").textContent = ch.name; $("resSub").textContent = opts.sub;
+  $("resNew").hidden = !opts.isNew;
+  const cnt = found[ch.id] || 0;
+  $("resMeta").textContent = opts.isNew ? "1re découverte !" : cnt > 0 ? `Obtenu ${cnt} fois` : "Pas encore tiré";
+  $("againBtn").textContent = opts.cta;
+  $("removeBtn").hidden = !opts.canRemove;
+  const multi = viewing && viewList.length > 1;
+  $("prevCardBtn").hidden = !multi;
+  $("nextCardBtn").hidden = !multi;
+}
+function showResult(ch, isNew){
+  viewing = false;
+  populateCard(ch, { label: "Tu es tombé sur…", sub: ch.sub, isNew, cta: "RELANCER !", canRemove: chars.length > 2 });
+  openDialog(resultDlg);
   $("againBtn").focus({ preventScroll: true });
 }
-function closeResult(){ $("resultScreen").hidden = true; }
-$("againBtn").addEventListener("click", () => { closeResult(); if (viewing){ viewing = false; return; } winner = -1; });
+function openCardViewer(list, idx){
+  viewing = true; viewList = list; viewIdx = idx;
+  const ch = viewList[viewIdx];
+  populateCard(ch, { label: ch.sub, sub: "", isNew: false, cta: "FERMER", canRemove: false });
+  openDialog(resultDlg);
+  $("againBtn").focus({ preventScroll: true });
+}
+function stepCard(dir){
+  if (!viewing || viewList.length < 2) return;
+  viewIdx = (viewIdx + dir + viewList.length) % viewList.length;
+  audio.uiClick();
+  const ch = viewList[viewIdx];
+  populateCard(ch, { label: ch.sub, sub: "", isNew: false, cta: "FERMER", canRemove: false });
+}
+function closeResult(){ closeTopLayer(resultDlg); }
+setupDialog(resultDlg, () => {
+  $("cardWrap").classList.remove("tilting");
+  if (viewing) viewing = false;
+});
+setupDialog(galleryDlg);
+function updateResetBtn(){
+  const removed = pool().length - chars.length;
+  $("resetBtn").hidden = removed <= 0;
+  if (removed > 0) $("resetBtn").textContent = `Remettre tout (${removed} retiré${removed > 1 ? "s" : ""})`;
+}
+$("resClose").addEventListener("click", () => { audio.uiClick(); closeResult(); });
+$("prevCardBtn").addEventListener("click", () => stepCard(-1));
+$("nextCardBtn").addEventListener("click", () => stepCard(1));
+$("againBtn").addEventListener("click", () => {
+  if (viewing){ audio.uiClick(); closeResult(); return; }
+  winner = -1;
+  closeTopLayer(resultDlg).then(() => randomSpin());
+});
 $("removeBtn").addEventListener("click", () => {
+  audio.uiClick();
   if (winner >= 0) chars.splice(winner, 1);
   winner = -1; closeResult(); renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
-  $("resetBtn").hidden = chars.length === pool().length;
+  updateTicker(true);
+  updateResetBtn();
 });
 $("resetBtn").addEventListener("click", () => {
+  audio.uiClick();
   chars = pool(); winner = -1; renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
-  $("resetBtn").hidden = true;
+  updateTicker(true);
+  updateResetBtn();
+  toast("Tous les héros sont de retour !");
 });
 $("spinBtn").addEventListener("click", randomSpin);
+
+/* Inclinaison 3D holographique + swipe sur la carte */
+(() => {
+  const wrap = $("cardWrap");
+  let sx = 0, swiping = false;
+  wrap.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    const r = wrap.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    wrap.style.setProperty("--ry", ((x - 0.5) * 16).toFixed(2) + "deg");
+    wrap.style.setProperty("--rx", ((0.5 - y) * 16).toFixed(2) + "deg");
+    wrap.style.setProperty("--sx", (x * 100).toFixed(1) + "%");
+    wrap.style.setProperty("--sy", (y * 100).toFixed(1) + "%");
+    wrap.classList.add("tilting");
+  });
+  wrap.addEventListener("pointerleave", () => wrap.classList.remove("tilting"));
+  wrap.addEventListener("pointerdown", e => { if (viewing){ sx = e.clientX; swiping = true; } });
+  wrap.addEventListener("pointerup", e => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.clientX - sx;
+    if (Math.abs(dx) > 45) stepCard(dx < 0 ? 1 : -1);
+  });
+  wrap.addEventListener("pointercancel", () => { swiping = false; });
+})();
 
 let toastTimer;
 function toast(msg){
@@ -804,7 +1201,10 @@ function drawPart(p, dt, W, H){
   c.restore();
 }
 
+const fxSupportsPopover = typeof fx.showPopover === "function";
+if (fxSupportsPopover) fx.setAttribute("popover", "manual");
 function startFx(){
+  if (fxSupportsPopover){ try { if (fx.matches(":popover-open")) fx.hidePopover(); fx.showPopover(); } catch(_){} }
   if (fxRunning) return;
   fxRunning = true; let lt = performance.now();
   requestAnimationFrame(function loop(t){
@@ -820,146 +1220,83 @@ function startFx(){
     parts = parts.filter(p => p.life < p.max);
     for (const p of parts){ p.life += dt; if (p.life >= 0) drawPart(p, dt, W, H); }
     if (parts.length || emitters.length) requestAnimationFrame(loop);
-    else { fxRunning = false; fctx.clearRect(0, 0, W, H); }
+    else {
+      fxRunning = false; fctx.clearRect(0, 0, W, H);
+      if (fxSupportsPopover){ try { if (fx.matches(":popover-open")) fx.hidePopover(); } catch(_){} }
+    }
   });
 }
 
 /* ========================================================================
-   AUDIO — tout est synthétisé (Web Audio), musique originale style "arcade 16-bit"
+   AUDIO — musique MP3 intégrée + bruitages synthétisés (Web Audio)
    ======================================================================== */
 const audio = (() => {
-  let ac = null, master, musicBus, sfxBus, delay, noiseBuf, spinNode = null;
-  let musicOn = true, sfxOn = true, playing = false, nextT = 0, step = 0, timer = null;
-  const BPM = 152, S16 = 60 / BPM / 4;
+  let ac = null, master, sfxBus, noiseBuf, spinNode = null;
+  let musicOn = true, sfxOn = true, unlocked = false;
+  try {
+    const m = localStorage.getItem("roue-music"), s = localStorage.getItem("roue-sfx");
+    if (m !== null) musicOn = m === "1";
+    if (s !== null) sfxOn = s === "1";
+  } catch(_){}
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  const BASE_VOL = 0.55;
+  const bgm = MUSIC_SRC ? new Audio(MUSIC_SRC) : null;
+  let fadeRaf = 0, duckTimer = 0;
+  if (bgm){ bgm.loop = true; bgm.preload = "auto"; bgm.volume = BASE_VOL; bgm.muted = !musicOn; }
+
+  function fadeMusic(target, ms){
+    if (!bgm) return;
+    cancelAnimationFrame(fadeRaf);
+    const startVol = bgm.volume, t0 = performance.now();
+    if (ms <= 0){ bgm.volume = target; return; }
+    (function step(now){
+      const k = Math.min(1, (now - t0) / ms);
+      bgm.volume = startVol + (target - startVol) * k;
+      if (k < 1) fadeRaf = requestAnimationFrame(step);
+    })(t0);
+  }
+  function duckMusic(level, holdMs){
+    if (!bgm || !musicOn) return;
+    clearTimeout(duckTimer);
+    fadeMusic(level, 120);
+    duckTimer = setTimeout(() => { if (musicOn) fadeMusic(BASE_VOL, 600); }, holdMs);
+  }
+  function playMusic(){
+    if (!bgm || !musicOn) return;
+    bgm.muted = false;
+    if (bgm.paused) bgm.play().catch(() => {});
+  }
 
   function unlock(){
+    unlocked = true;
     if (!ac){
-      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-      try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch(_){}
-      ac = new AC();
-      master = ac.createGain(); master.gain.value = 0.9;
-      const comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
-      master.connect(comp).connect(ac.destination);
-      musicBus = ac.createGain(); musicBus.gain.value = musicOn ? 0.55 : 0; musicBus.connect(master);
-      sfxBus = ac.createGain(); sfxBus.gain.value = sfxOn ? 1 : 0; sfxBus.connect(master);
-      delay = ac.createDelay(1); delay.delayTime.value = S16 * 3;
-      const fb = ac.createGain(); fb.gain.value = 0.32; const wet = ac.createGain(); wet.gain.value = 0.3;
-      const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600;
-      delay.connect(lp).connect(fb).connect(delay); lp.connect(wet).connect(musicBus);
-      noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
-      const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2-1;
-      // bruit de roue continu (frottement)
-      const src = ac.createBufferSource(); src.buffer = noiseBuf; src.loop = true;
-      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 600; bp.Q.value = 0.8;
-      const g = ac.createGain(); g.gain.value = 0;
-      src.connect(bp).connect(g).connect(sfxBus); src.start();
-      spinNode = { g, bp };
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC){
+        try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch(_){}
+        ac = new AC();
+        master = ac.createGain(); master.gain.value = 0.9;
+        const comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+        master.connect(comp).connect(ac.destination);
+        sfxBus = ac.createGain(); sfxBus.gain.value = sfxOn ? 1 : 0; sfxBus.connect(master);
+        noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+        const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2-1;
+        // bruit de roue continu (frottement)
+        const src = ac.createBufferSource(); src.buffer = noiseBuf; src.loop = true;
+        const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 600; bp.Q.value = 0.8;
+        const g = ac.createGain(); g.gain.value = 0;
+        src.connect(bp).connect(g).connect(sfxBus); src.start();
+        spinNode = { g, bp };
+      }
     }
-    if (ac.state !== "running") ac.resume();
-    if (!playing) startMusic();
+    if (ac && ac.state !== "running") ac.resume();
+    playMusic();
   }
 
-  function env(g, t, a, peak, dec, sus, rel, end){
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(peak, t + a);
-    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, peak*sus), t + a + dec);
-    g.gain.setValueAtTime(Math.max(0.0001, peak*sus), end);
-    g.gain.exponentialRampToValueAtTime(0.0001, end + rel);
-  }
   function noise(t, dur, type, freq, gain, bus){
     const s = ac.createBufferSource(); s.buffer = noiseBuf;
     const f = ac.createBiquadFilter(); f.type = type; f.frequency.value = freq;
     const g = ac.createGain(); g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    s.connect(f).connect(g).connect(bus || musicBus); s.start(t, Math.random()*0.5); s.stop(t + dur + 0.02);
-  }
-
-  /* --- instruments --- */
-  function lead(t, m, len){
-    const end = t + len*S16 - 0.02, f = mtof(m);
-    const g = ac.createGain(); const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3800;
-    const o1 = ac.createOscillator(), o2 = ac.createOscillator();
-    o1.type = "square"; o2.type = "sawtooth"; o1.frequency.value = f; o2.frequency.value = f; o2.detune.value = 8;
-    const vib = ac.createOscillator(), vg = ac.createGain(); vib.frequency.value = 6; vg.gain.setValueAtTime(0, t); vg.gain.linearRampToValueAtTime(f*0.006, t + 0.18);
-    vib.connect(vg); vg.connect(o1.frequency); vg.connect(o2.frequency);
-    const mix = ac.createGain(); mix.gain.value = 0.5;
-    o1.connect(mix); o2.connect(mix); mix.connect(lp).connect(g);
-    g.connect(musicBus); g.connect(delay);
-    env(g, t, 0.006, 0.11, 0.12, 0.6, 0.06, end);
-    [o1,o2,vib].forEach(o => { o.start(t); o.stop(end + 0.1); });
-  }
-  function bass(t, m, len){
-    const end = t + len*S16 - 0.015;
-    const o = ac.createOscillator(), o2 = ac.createOscillator(); o.type = "triangle"; o2.type = "square";
-    o.frequency.value = mtof(m); o2.frequency.value = mtof(m);
-    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(1400, t); lp.frequency.exponentialRampToValueAtTime(380, t + 0.12);
-    const g = ac.createGain(), g2 = ac.createGain(); g2.gain.value = 0.35;
-    o.connect(g); o2.connect(g2).connect(g); g.connect(lp).connect(musicBus);
-    env(g, t, 0.004, 0.32, 0.08, 0.55, 0.04, end);
-    o.start(t); o2.start(t); o.stop(end + 0.08); o2.stop(end + 0.08);
-  }
-  function stab(t, notes){
-    const end = t + 0.09;
-    const g = ac.createGain(); const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2400;
-    g.connect(lp).connect(musicBus);
-    env(g, t, 0.004, 0.05, 0.05, 0.4, 0.05, end);
-    notes.forEach(m => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = mtof(m); o.connect(g); o.start(t); o.stop(end + 0.08); });
-  }
-  function kick(t){
-    const o = ac.createOscillator(), g = ac.createGain(); o.type = "sine";
-    o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
-    g.gain.setValueAtTime(0.55, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
-    o.connect(g).connect(musicBus); o.start(t); o.stop(t + 0.25);
-  }
-  function snare(t){
-    noise(t, 0.14, "highpass", 1400, 0.28);
-    const o = ac.createOscillator(), g = ac.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(140, t+0.06);
-    g.gain.setValueAtTime(0.18, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08); o.connect(g).connect(musicBus); o.start(t); o.stop(t+0.1);
-  }
-  const hat = (t, open) => noise(t, open ? 0.12 : 0.03, "highpass", 7500, open ? 0.07 : 0.06);
-
-  /* --- partition originale : 8 mesures, 16 doubles-croches par mesure --- */
-  const CH = [ // [basse, notes d'accord]
-    [41,[65,69,72,76]], [43,[67,71,74,77]], [40,[64,67,71,74]], [45,[69,72,76,79]],
-    [38,[62,65,69,72]], [43,[67,71,74,77]], [36,[64,67,71,72]], [36,[64,67,72,76]],
-  ];
-  const MEL = [
-    [[0,72,2],[2,76,2],[4,77,3],[7,76,1],[8,72,2],[10,69,2],[12,72,4]],
-    [[0,74,2],[2,71,2],[4,74,2],[6,79,4],[10,77,2],[12,74,4]],
-    [[0,76,3],[3,74,1],[4,71,2],[6,67,2],[8,71,2],[10,74,2],[12,76,4]],
-    [[0,81,4],[4,79,2],[6,76,2],[8,72,2],[10,76,2],[12,79,2],[14,81,2]],
-    [[0,77,2],[2,81,2],[4,84,4],[8,81,2],[10,77,2],[12,74,4]],
-    [[0,71,2],[2,74,2],[4,77,2],[6,79,2],[8,83,4],[12,81,2],[14,83,2]],
-    [[0,84,6],[6,83,2],[8,79,4],[12,76,4]],
-    [[0,79,2],[2,76,2],[4,72,2],[6,74,2],[8,76,2],[10,79,2],[12,84,4]],
-  ];
-  const BASS_PAT = [0,12,0,12,0,12,7,12]; // croches : fondamentale / octave / quinte
-  function scheduleStep(t, s){
-    const loop = Math.floor(s / 128), inLoop = s % 128, bar = Math.floor(inLoop / 16), st = inLoop % 16;
-    const [root, chord] = CH[bar];
-    const bLoop = loop % 2 === 1;
-    // batterie
-    if (st === 0 || st === 8 || (st === 10 && bar % 2) || (st === 14 && bar === 7)) kick(t);
-    if (st === 4 || st === 12) snare(t);
-    if (bar === 7 && st >= 12) snare(t);
-    if (st % 2 === 0) hat(t, st % 4 === 2 && st === 14);
-    // basse en croches
-    if (st % 2 === 0) bass(t, root + BASS_PAT[st/2], 2);
-    // accords sur les contretemps
-    if (st === 2 || st === 6 || st === 10 || st === 14 || (st === 7 && bar % 2)) stab(t, chord);
-    // mélodie (A) ou arpèges (B)
-    if (!bLoop){
-      for (const [ps, m, len] of MEL[bar]) if (ps === st) lead(t, m, len);
-    } else {
-      const arp = [chord[0]+12, chord[1]+12, chord[2]+12, chord[3]+12, chord[2]+12, chord[1]+12];
-      if (st % 2 === 0) lead(t, arp[(st/2) % arp.length], 2);
-    }
-  }
-  function startMusic(){
-    playing = true; nextT = ac.currentTime + 0.08; step = 0;
-    timer = setInterval(() => {
-      while (nextT < ac.currentTime + 0.15){ if (musicOn) scheduleStep(nextT, step); nextT += S16; step++; }
-    }, 25);
+    s.connect(f).connect(g).connect(bus || sfxBus); s.start(t, Math.random()*0.5); s.stop(t + dur + 0.02);
   }
 
   /* --- bruitages --- */
@@ -997,7 +1334,7 @@ const audio = (() => {
   function win(){
     if (!ac || !sfxOn) return;
     const t = ac.currentTime + 0.02;
-    musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(musicOn ? 0.15 : 0, t, 0.05); musicBus.gain.setTargetAtTime(musicOn ? 0.55 : 0, t + 2.2, 0.3);
+    duckMusic(0.15, 2200);
     const fan = [[72,0],[76,1],[79,2],[84,3],[79,4.5],[84,5.5]];
     fan.forEach(([m, k]) => {
       const st = t + k*0.09, end = st + (k >= 5 ? 0.7 : 0.11);
@@ -1012,7 +1349,7 @@ const audio = (() => {
   function superWin(power){
     if (!ac || !sfxOn) return;
     const t = ac.currentTime + 0.02, dark = power === "darkfire" || power === "shadow";
-    musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(musicOn ? 0.08 : 0, t, 0.04); musicBus.gain.setTargetAtTime(musicOn ? 0.55 : 0, t + 3.4, 0.4);
+    duckMusic(0.08, 3400);
     const sweep = (type, f0, f1, dur, vol, lfoHz, lfoAmt) => {
       const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
       o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
@@ -1067,23 +1404,123 @@ const audio = (() => {
     });
     for (let i = 0; i < 12; i++) chime(T + 0.3 + i*0.09, (dark ? 1480 : 1568) + i*70, 2637 + i*90, 0.06);
   }
+  function uiClick(){
+    if (!ac || !sfxOn) return;
+    const t = ac.currentTime;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "triangle"; o.frequency.setValueAtTime(760, t); o.frequency.exponentialRampToValueAtTime(1180, t + 0.045);
+    g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+    o.connect(g).connect(sfxBus); o.start(t); o.stop(t + 0.065);
+  }
   function setSpinLevel(w){
     if (!spinNode) return;
     const t = ac.currentTime, x = Math.min(1, w / 30);
     spinNode.g.gain.setTargetAtTime(sfxOn ? x*0.10 : 0, t, 0.05);
     spinNode.bp.frequency.setTargetAtTime(300 + x*1500, t, 0.05);
   }
-  function setMusic(on){ musicOn = on; if (musicBus) musicBus.gain.setTargetAtTime(on ? 0.55 : 0, ac.currentTime, 0.05); }
-  function setSfx(on){ sfxOn = on; if (sfxBus) sfxBus.gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.02); }
-  return { unlock, tick, whoosh, win, superWin, setSpinLevel, setMusic, setSfx, get musicOn(){return musicOn}, get sfxOn(){return sfxOn} };
+  function setMusic(on){
+    musicOn = on;
+    try { localStorage.setItem("roue-music", on ? "1" : "0"); } catch(_){}
+    if (!bgm) return;
+    clearTimeout(duckTimer);
+    bgm.muted = !on;
+    if (on){
+      fadeMusic(BASE_VOL, 150);
+      if (unlocked) playMusic();
+    } else {
+      cancelAnimationFrame(fadeRaf);
+      bgm.pause();
+    }
+  }
+  function setSfx(on){
+    sfxOn = on;
+    try { localStorage.setItem("roue-sfx", on ? "1" : "0"); } catch(_){}
+    if (sfxBus) sfxBus.gain.setTargetAtTime(on ? 1 : 0, ac.currentTime, 0.02);
+  }
+  function setHidden(hidden){
+    if (ac){
+      if (hidden){ if (ac.state === "running") ac.suspend(); }
+      else { if (ac.state === "suspended") ac.resume(); }
+    }
+    if (bgm){
+      if (hidden) bgm.pause();
+      else if (unlocked && musicOn) playMusic();
+    }
+  }
+  return { unlock, tick, whoosh, win, superWin, uiClick, setSpinLevel, setMusic, setSfx, setHidden, get musicOn(){return musicOn}, get sfxOn(){return sfxOn} };
 })();
 
-$("musicBtn").addEventListener("click", () => { audio.unlock(); audio.setMusic(!audio.musicOn); $("musicBtn").classList.toggle("off", !audio.musicOn); });
-$("sfxBtn").addEventListener("click", () => { audio.unlock(); audio.setSfx(!audio.sfxOn); $("sfxBtn").classList.toggle("off", !audio.sfxOn); });
-/* ---------- Accueil ---------- */
+function syncAudioBtns(){
+  $("musicBtn").classList.toggle("off", !audio.musicOn);
+  $("musicBtn").setAttribute("aria-pressed", String(audio.musicOn));
+  $("sfxBtn").classList.toggle("off", !audio.sfxOn);
+  $("sfxBtn").setAttribute("aria-pressed", String(audio.sfxOn));
+}
+syncAudioBtns();
+function toggleMusic(){ audio.unlock(); audio.setMusic(!audio.musicOn); syncAudioBtns(); audio.uiClick(); }
+function toggleSfx(){ audio.unlock(); audio.setSfx(!audio.sfxOn); syncAudioBtns(); if (audio.sfxOn) audio.uiClick(); }
+$("musicBtn").addEventListener("click", toggleMusic);
+$("sfxBtn").addEventListener("click", toggleSfx);
+
+/* ---------- Accueil & Collection ---------- */
 function setMode(m){
   mode = m; try { localStorage.setItem("roue-mode", m); } catch(_){}
   document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+}
+const galCards = new Map();
+function refreshCollectionUI(){
+  const total = ALL_CHARS.length;
+  const count = ALL_CHARS.filter(c => (found[c.id] || 0) > 0).length;
+  const pct = total ? Math.round((count / total) * 100) : 0;
+  $("galProgText").textContent = `${count} / ${total} découverts`;
+  $("galProgBar").style.width = pct + "%";
+  $("galleryBtn").textContent = count > 0 ? `Voir la collection (${count}/${total})` : "Voir la collection";
+  const badge = $("galBadge");
+  badge.textContent = String(count);
+  badge.hidden = count === 0;
+  const foundChip = document.querySelector('.chip[data-filter="found"]');
+  if (foundChip) foundChip.textContent = `Obtenus (${count})`;
+
+  let visSpec = 0, visClas = 0;
+  for (const c of ALL_CHARS){
+    const btn = galCards.get(c.id);
+    if (!btn) continue;
+    const n = found[c.id] || 0;
+    btn.classList.toggle("unseen", n === 0);
+    let tag = btn.querySelector(".found-tag");
+    if (n > 0){
+      if (!tag){ tag = document.createElement("span"); tag.className = "found-tag"; btn.appendChild(tag); }
+      tag.textContent = n > 1 ? `★ ×${n}` : "★";
+    } else if (tag) tag.remove();
+
+    const g = c.group || "classic";
+    const show = galFilter === "all" || (galFilter === "found" && n > 0) || galFilter === g;
+    btn.hidden = !show;
+    if (show){ if (g === "special") visSpec++; else visClas++; }
+  }
+  $("galSpecialH").hidden = visSpec === 0;
+  document.querySelector('[data-grid="special"]').hidden = visSpec === 0;
+  $("galClassicH").hidden = visClas === 0;
+  document.querySelector('[data-grid="classic"]').hidden = visClas === 0;
+  $("galEmpty").hidden = visSpec + visClas > 0;
+}
+function visibleCollectionList(){
+  const ordered = [
+    ...ALL_CHARS.filter(c => c.group === "special"),
+    ...ALL_CHARS.filter(c => (c.group || "classic") !== "special"),
+  ];
+  return ordered.filter(c => {
+    const g = c.group || "classic";
+    if (galFilter === "found") return (found[c.id] || 0) > 0;
+    if (galFilter === "special" || galFilter === "classic") return g === galFilter;
+    return true;
+  });
+}
+function openGallery(){
+  audio.uiClick();
+  refreshCollectionUI();
+  openDialog(galleryDlg);
+  $("galClose").focus({ preventScroll: true });
 }
 function buildHome(){
   const byGroup = g => ALL_CHARS.filter(c => g === "all" || (c.group || "classic") === g);
@@ -1106,35 +1543,67 @@ function buildHome(){
       const b = document.createElement("button"); b.setAttribute("aria-label", c.name);
       b.appendChild(img(c)).src = c.card;
       b.addEventListener("click", () => {
-        viewing = true;
-        $("resLabel").textContent = c.sub; $("resImg").src = c.card; $("resImg").alt = c.name;
-        $("resName").textContent = c.name; $("resSub").textContent = "";
-        $("againBtn").textContent = "FERMER"; $("removeBtn").hidden = true;
-        $("resultScreen").classList.toggle("special", c.group === "special");
-        if (c.group === "special"){ const pw = powerOf(c); applyPower($("resultScreen"), pw); $("resLabel").textContent = `${pw.icon} ${pw.name} ${pw.icon}`; }
-        $("resultScreen").hidden = false; $("againBtn").focus({ preventScroll: true });
+        audio.uiClick();
+        const list = visibleCollectionList();
+        const idx = Math.max(0, list.findIndex(x => x.id === c.id));
+        openCardViewer(list.length ? list : [c], idx);
       });
       grid.appendChild(b);
+      galCards.set(c.id, b);
     });
   }
   setMode(byGroup(mode).length ? mode : "all");
+  refreshCollectionUI();
 }
-document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => { audio.unlock(); setMode(b.dataset.mode); }));
+document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => { audio.unlock(); audio.uiClick(); setMode(b.dataset.mode); }));
+document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+  audio.uiClick();
+  galFilter = b.dataset.filter;
+  document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  refreshCollectionUI();
+}));
 $("startBtn").addEventListener("click", () => {
-  audio.unlock();
+  audio.unlock(); audio.uiClick();
   if (launched || dragging) return;
   chars = pool(); omega = 0; winner = -1; renderWheel(); lastSeg = Math.floor(theta/(TAU/chars.length));
-  $("resetBtn").hidden = true; $("spinBtn").disabled = false;
+  updateResetBtn(); resetTicker(); $("spinBtn").disabled = false;
   $("home").hidden = true;
 });
 $("homeBtn").addEventListener("click", () => {
+  audio.uiClick();
   launched = false; omega = 0; dragging = false; winner = -1; $("spinBtn").disabled = false;
   closeResult(); $("home").hidden = false;
 });
-$("galleryBtn").addEventListener("click", () => { $("galleryScreen").hidden = false; $("galClose").focus({ preventScroll: true }); });
-$("galClose").addEventListener("click", () => { $("galleryScreen").hidden = true; });
+$("galleryBtn").addEventListener("click", openGallery);
+$("gameGalBtn").addEventListener("click", openGallery);
+$("galClose").addEventListener("click", () => { audio.uiClick(); closeTopLayer(galleryDlg); });
+$("pauseStripBtn").addEventListener("click", () => {
+  const paused = $("home").classList.toggle("paused");
+  $("pauseStripBtn").textContent = paused ? "Reprendre défilement" : "Pause défilement";
+});
+
+/* ---------- Raccourcis clavier ---------- */
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (resultDlg.open && viewing){
+    if (e.key === "ArrowLeft"){ e.preventDefault(); stepCard(-1); return; }
+    if (e.key === "ArrowRight"){ e.preventDefault(); stepCard(1); return; }
+  }
+  if (resultDlg.open || galleryDlg.open) return;
+  const k = e.key.toLowerCase();
+  if (k === "m"){ toggleMusic(); return; }
+  if (k === "s"){ toggleSfx(); return; }
+  if (k === "c"){ openGallery(); return; }
+  if (e.code === "Space" && $("home").hidden){
+    const tag = document.activeElement?.tagName;
+    if (tag === "BUTTON" && document.activeElement !== $("spinBtn")) return;
+    e.preventDefault();
+    randomSpin();
+  }
+});
+
 buildHome();
-document.addEventListener("visibilitychange", () => { /* le navigateur suspend déjà l'audio en arrière-plan */ });
+document.addEventListener("visibilitychange", () => audio.setHidden(document.hidden));
 
 /* ---------- Démarrage ---------- */
 const fontsReady = document.fonts ? document.fonts.load('40px "Luckiest Guy"').catch(()=>{}) : Promise.resolve();
