@@ -85,43 +85,63 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 .result .sub{font-weight:700; opacity:.9; margin-top:-6px}
 .result .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
 #fx{position:fixed; inset:0; pointer-events:none; z-index:30}
-/* Victoire d'un personnage spécial */
-.burst{position:fixed; inset:0; z-index:25; pointer-events:none; display:grid; place-items:center; overflow:hidden}
+/* Victoire d'un personnage spécial — couleurs données par le pouvoir (--c1..--c3, --flash, --glow, --tint) */
+.burst{position:fixed; inset:0; z-index:25; pointer-events:none; display:grid; place-items:center; overflow:hidden;
+  --c1:#fff; --c2:#ffd21a; --c3:#ff9f00; --flash:#fff; --glow:rgba(255,210,26,.9); --tint:rgba(0,0,0,.4)}
 .burst[hidden]{display:none!important}
-.burst .flash{position:absolute; inset:0; background:#fff; opacity:0; animation:flash 1.5s ease-out forwards}
+.burst::before{content:""; position:absolute; inset:0; background:radial-gradient(circle, transparent 15%, var(--tint) 75%); animation:veil 1.55s both}
+@keyframes veil{0%{opacity:0} 15%,85%{opacity:1} 100%{opacity:0}}
+.burst .flash{position:absolute; inset:0; background:var(--flash); opacity:0; animation:flash 1.5s ease-out forwards}
 @keyframes flash{0%{opacity:0} 6%{opacity:.95} 22%{opacity:0} 30%{opacity:.6} 45%{opacity:0} 100%{opacity:0}}
-.rays{position:absolute; width:250vmax; aspect-ratio:1; border-radius:50%;
-  background:repeating-conic-gradient(from 0deg, rgba(255,77,109,.55) 0 6deg, transparent 6deg 15deg, rgba(255,210,58,.55) 15deg 21deg, transparent 21deg 30deg, rgba(92,255,138,.5) 30deg 36deg, transparent 36deg 45deg, rgba(58,208,255,.55) 45deg 51deg, transparent 51deg 60deg, rgba(180,92,255,.6) 60deg 66deg, transparent 66deg 75deg);
+.rays{position:absolute; width:250vmax; aspect-ratio:1; border-radius:50%; opacity:.6;
+  background:repeating-conic-gradient(from 0deg, var(--c1) 0 5deg, transparent 5deg 15deg, var(--c2) 15deg 20deg, transparent 20deg 30deg, var(--c3) 30deg 35deg, transparent 35deg 45deg);
   -webkit-mask-image:radial-gradient(circle, #000 8%, transparent 45%); mask-image:radial-gradient(circle, #000 8%, transparent 45%);
   animation:spinRays 6s linear infinite, raysIn .5s ease-out both}
 @keyframes spinRays{to{transform:rotate(360deg)}}
-@keyframes raysIn{from{opacity:0; scale:.2} to{opacity:1; scale:1}}
+@keyframes raysIn{from{opacity:0; scale:.2} to{scale:1}}
 .burst .hero{position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; animation:heroIn 1.5s cubic-bezier(.2,1.5,.4,1) both}
-.burst .hero img{width:min(220px,46vw); aspect-ratio:1; border-radius:50%; border:8px solid #fff;
-  box-shadow:0 0 0 5px var(--ink), 0 0 40px 14px rgba(255,255,255,.9), 0 0 90px 30px rgba(180,92,255,.8); animation:aura .35s ease-in-out infinite alternate}
-@keyframes aura{to{box-shadow:0 0 0 5px var(--ink), 0 0 60px 22px rgba(255,255,255,1), 0 0 130px 50px rgba(255,210,58,.85)}}
+.burst .hero img{position:relative; width:min(220px,46vw); aspect-ratio:1; border-radius:50%; border:8px solid #fff; box-shadow:0 0 0 5px var(--ink)}
+/* halo : dégradé fixe qui pulse en échelle/opacité (composité, pas de repeinture) */
+.burst .hero::before{content:""; position:absolute; left:50%; top:min(110px,23vw); width:min(560px,118vw); aspect-ratio:1; translate:-50% -50%; border-radius:50%;
+  background:radial-gradient(circle, #fff 0 22%, var(--glow) 34%, transparent 68%); animation:aura .35s ease-in-out infinite alternate; will-change:transform, opacity}
+@keyframes aura{from{transform:scale(.85); opacity:.75} to{transform:scale(1.08); opacity:1}}
 @keyframes heroIn{0%{transform:scale(0) rotate(-200deg); opacity:0} 35%{transform:scale(1.15) rotate(8deg); opacity:1} 50%{transform:scale(1) rotate(0)} 85%{transform:scale(1); opacity:1} 100%{transform:scale(2.4); opacity:0}}
-.burst .hero b{font-family:var(--display); font-weight:400; font-size:clamp(34px,8vw,72px); line-height:1; white-space:nowrap;
-  background:linear-gradient(90deg,#ff4d6d,#ffd23a,#5cff8a,#3ad0ff,#b45cff,#ff4d6d); background-size:200% 100%;
+.burst .hero b{font-family:var(--display); font-weight:400; font-size:clamp(30px,7vw,64px); line-height:1; white-space:nowrap;
+  background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c2),var(--c1)); background-size:200% 100%;
   -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:2px var(--ink);
-  filter:drop-shadow(0 5px 0 var(--ink)); animation:rainbow 1s linear infinite}
+  animation:rainbow 1s linear infinite; position:relative}
 @keyframes rainbow{to{background-position:200% 0}}
+/* variantes par pouvoir */
+.burst[data-power="lightning"] .hero{animation-name:heroZap}
+@keyframes heroZap{0%{transform:translateY(-120vh) scale(.6); opacity:1} 18%{transform:translateY(0) scale(1.2)} 24%{transform:scale(.92)} 30%,85%{transform:scale(1); opacity:1} 100%{transform:scale(2.4); opacity:0}}
+.burst[data-power="darkfire"] .rays{opacity:.3}
+.burst[data-power="darkfire"] .hero{animation-name:heroRise}
+@keyframes heroRise{0%{transform:translateY(50vh) scale(.5); opacity:0; filter:brightness(3) hue-rotate(40deg)} 35%{transform:translateY(-10px) scale(1.1); opacity:1; filter:none} 50%,85%{transform:none; opacity:1} 100%{transform:scale(2.4); opacity:0}}
+.burst[data-power="firestorm"] .rays{animation-duration:1.4s, .5s; opacity:.3}
+.burst[data-power="firestorm"] .hero{animation-name:heroSpin}
+@keyframes heroSpin{0%{transform:scale(0) rotate(-900deg); opacity:0} 40%{transform:scale(1.12) rotate(10deg); opacity:1} 52%,85%{transform:scale(1) rotate(0); opacity:1} 100%{transform:scale(2.4) rotate(40deg); opacity:0}}
+.burst[data-power="shadow"] .rays{animation-direction:reverse; opacity:.8}
+.burst[data-power="shadow"] .hero{animation-name:heroFade}
+@keyframes heroFade{0%{opacity:0; transform:scale(1.8); filter:brightness(0)} 40%{opacity:1; transform:scale(1); filter:brightness(1)} 48%{filter:brightness(1.6) saturate(1.5)} 55%,85%{opacity:1; transform:scale(1); filter:none} 100%{opacity:0; transform:scale(.2)}}
+.burst[data-power="prism"] .rays{background:repeating-conic-gradient(from 0deg, #ff4d6d 0 6deg, transparent 6deg 15deg, #ffd23a 15deg 21deg, transparent 21deg 30deg, #5cff8a 30deg 36deg, transparent 36deg 45deg, #3ad0ff 45deg 51deg, transparent 51deg 60deg, #b45cff 60deg 66deg, transparent 66deg 75deg)}
+.burst[data-power="prism"] .hero b, #resultScreen[data-power="prism"] .label{background-image:linear-gradient(90deg,#ff4d6d,#ffd23a,#5cff8a,#3ad0ff,#b45cff,#ff4d6d)}
 .shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97) 2}
 @keyframes shake{10%,90%{transform:translate(-2px,1px)} 20%,80%{transform:translate(5px,-3px)} 30%,50%,70%{transform:translate(-8px,4px)} 40%,60%{transform:translate(8px,-4px)}}
-/* Carte résultat en mode spécial */
-#resultScreen.special{background:radial-gradient(circle at 50% 45%, rgba(120,40,200,.55), rgba(6,10,40,.88) 70%)}
+/* Carte résultat d'un personnage spécial */
+#resultScreen.special{background:radial-gradient(circle at 50% 45%, var(--tint), rgba(6,10,40,.9) 70%)}
 #resultScreen.special .result{position:relative; border-color:transparent; isolation:isolate;
-  background:linear-gradient(#5b1fa8, #1a0b44) padding-box, conic-gradient(from var(--a,0deg), #ff4d6d, #ffd23a, #5cff8a, #3ad0ff, #b45cff, #ff4d6d) border-box;
-  animation:pop .45s cubic-bezier(.2,1.6,.4,1), hue 2s linear infinite; box-shadow:0 0 0 4px var(--ink), 0 0 50px 10px rgba(180,92,255,.7), 0 20px 50px rgba(0,0,0,.5)}
+  background:linear-gradient(var(--card1), var(--card2)) padding-box, conic-gradient(from var(--a,0deg), var(--c1), var(--c2), var(--c3), var(--c2), var(--c1)) border-box;
+  animation:pop .45s cubic-bezier(.2,1.6,.4,1), hue 2s linear infinite; box-shadow:0 0 0 4px var(--ink), 0 0 50px 10px var(--glow), 0 20px 50px rgba(0,0,0,.5)}
+#resultScreen[data-power="prism"] .result{background:linear-gradient(var(--card1), var(--card2)) padding-box, conic-gradient(from var(--a,0deg), #ff4d6d, #ffd23a, #5cff8a, #3ad0ff, #b45cff, #ff4d6d) border-box}
 @property --a{syntax:"<angle>"; inherits:false; initial-value:0deg}
 @keyframes hue{to{--a:360deg}}
-#resultScreen.special .label{font-size:26px; background:linear-gradient(90deg,#ff4d6d,#ffd23a,#5cff8a,#3ad0ff,#b45cff,#ff4d6d); background-size:200% 100%;
+#resultScreen.special .label{font-size:24px; background-image:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c2),var(--c1)); background-size:200% 100%;
   -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-stroke:1px var(--ink); animation:rainbow 1.2s linear infinite}
 #resultScreen.special .cardwrap{position:relative; border-radius:12px; overflow:hidden; animation:glow 1.2s ease-in-out infinite alternate}
 #resultScreen.special .cardwrap::after{content:""; position:absolute; inset:0; pointer-events:none;
   background:linear-gradient(110deg, transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%); background-size:250% 100%; animation:shine 2.2s ease-in-out infinite}
 @keyframes shine{from{background-position:150% 0} to{background-position:-100% 0}}
-@keyframes glow{from{filter:drop-shadow(0 0 6px rgba(255,255,255,.6))} to{filter:drop-shadow(0 0 22px rgba(255,210,58,.95))}}
+@keyframes glow{from{filter:drop-shadow(0 0 6px rgba(255,255,255,.6))} to{filter:drop-shadow(0 0 22px var(--glow))}}
 .cardwrap{display:block; line-height:0}
 #resultScreen.special .name{background:linear-gradient(#fff,#ffe36b); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 3px 0 var(--ink))}
 /* Écran d'accueil */
@@ -242,7 +262,7 @@ button:focus-visible{outline:3px solid var(--white); outline-offset:3px}
 <div class="burst" id="burst" hidden aria-hidden="true">
   <div class="rays"></div>
   <div class="flash"></div>
-  <div class="hero"><img id="burstImg" alt=""><b>SPÉCIAL&nbsp;!</b></div>
+  <div class="hero"><img id="burstImg" alt=""><b id="burstName">SPÉCIAL&nbsp;!</b></div>
 </div>
 
 <canvas id="fx"></canvas>
@@ -271,6 +291,7 @@ let lastSeg = 0, lastTickT = 0;
 let winner = -1, winPulse = 0;
 let size = 400, dpr = 1, cx = 0, cy = 0, Ro = 0, Rw = 0;
 const off = document.createElement("canvas");
+const shadowCv = document.createElement("canvas"); // ombre portée, calculée une fois par taille
 const faces = [];
 
 /* ---------- Physique ---------- */
@@ -308,7 +329,15 @@ function shade(hex, f){
   return `rgb(${r},${g},${b})`;
 }
 
+function renderShadow(){
+  const pad = Math.ceil(Ro*0.1), S = Math.ceil(Ro*2.02) + pad*2;
+  shadowCv.width = shadowCv.height = S;
+  const g = shadowCv.getContext("2d");
+  g.filter = "blur(" + Math.round(Ro*0.03) + "px)"; g.fillStyle = "rgba(6,24,66,.45)";
+  g.beginPath(); g.arc(S/2, S/2, Ro*1.005, 0, TAU); g.fill();
+}
 function renderWheel(){
+  renderShadow();
   const D = Math.ceil(Ro * 2) + 4; off.width = off.height = D;
   const g = off.getContext("2d"); const c = D / 2;
   const n = chars.length, seg = TAU / n;
@@ -415,9 +444,7 @@ function draw(){
   const D = canvas.width;
   ctx.clearRect(0,0,D,D);
   // ombre portée de la roue
-  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy + Ro*0.03, Ro*1.005, 0, TAU);
-  ctx.fillStyle = "rgba(6,24,66,.45)"; ctx.filter = "blur(" + Math.round(Ro*0.03) + "px)"; ctx.fill(); ctx.restore();
-  ctx.filter = "none";
+  ctx.drawImage(shadowCv, cx - shadowCv.width/2, cy + Ro*0.03 - shadowCv.height/2);
   ctx.save(); ctx.translate(cx,cy); ctx.rotate(theta);
   ctx.drawImage(off, -off.width/2, -off.height/2);
   if (winner >= 0 && winner < chars.length){
@@ -551,16 +578,31 @@ function onStop(){
   confetti();
   setTimeout(() => showResult(ch), 650);
 }
+/* Pouvoirs des personnages spéciaux : couleurs, effet visuel et son */
+const POWERS = {
+  supersonic: { key:"lightning", name:"ÉCLAIR DORÉ",     icon:"⚡", c:["#fff7b0","#ffd21a","#ff9f00"], flash:"#fff4b8", glow:"rgba(255,200,20,.9)",  tint:"rgba(140,95,0,.55)",  card:["#a86d00","#3a2400"] },
+  darksonic:  { key:"darkfire",  name:"FLAMMES SOMBRES", icon:"🔥", c:["#f6c8ff","#b23cff","#4a0d85"], flash:"#3a0866", glow:"rgba(178,60,255,.9)",  tint:"rgba(70,10,130,.65)", card:["#4a0f80","#12031f"] },
+  darktails:  { key:"firestorm", name:"TORNADE DE FEU",  icon:"🌪️", c:["#fff1a8","#ff9a1a","#e8380d"], flash:"#ffb347", glow:"rgba(255,130,20,.9)",  tint:"rgba(40,8,0,.85)",  card:["#7a2e00","#1f0a00"] },
+  shadowdark: { key:"shadow",    name:"ONDE D'OMBRE",    icon:"🌑", c:["#e6ccff","#8a2be2","#ff2a4a"], flash:"#000000", glow:"rgba(255,40,70,.85)",  tint:"rgba(10,0,20,.85)",   card:["#2a0a3d","#06010c"] },
+  hypersonic: { key:"prism",     name:"PRISME HYPER",    icon:"🌈", c:["#ff4d6d","#ffd23a","#3ad0ff"], flash:"#ffffff", glow:"rgba(180,92,255,.85)", tint:"rgba(120,40,200,.55)",card:["#5b1fa8","#1a0b44"] },
+};
+const powerOf = ch => POWERS[ch.id] || POWERS.hypersonic;
+function applyPower(el, pw){
+  el.dataset.power = pw.key;
+  [["--c1",pw.c[0]],["--c2",pw.c[1]],["--c3",pw.c[2]],["--flash",pw.flash],["--glow",pw.glow],["--tint",pw.tint],["--card1",pw.card[0]],["--card2",pw.card[1]]]
+    .forEach(([k,v]) => el.style.setProperty(k, v));
+}
 function specialWin(ch){
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  audio.superWin();
+  const pw = powerOf(ch), calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  audio.superWin(pw.key);
   if (calm){ setTimeout(() => showResult(ch), 400); return; }
   $("burstImg").src = ch.face;
-  const b = $("burst"); b.hidden = false;
+  $("burstName").textContent = pw.name + " !";
+  const b = $("burst"); applyPower(b, pw); b.hidden = false;
   b.querySelectorAll(".flash,.hero,.rays").forEach(el => { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
   const app = document.querySelector(".app"); app.classList.remove("shake"); void app.offsetWidth; app.classList.add("shake");
-  bolts(); setTimeout(() => confetti(true), 250);
-  setTimeout(() => { showResult(ch); confetti(true); }, 1450);
+  powerFx(pw);
+  setTimeout(() => { showResult(ch); confetti(pw); }, 1450);
   setTimeout(() => { b.hidden = true; app.classList.remove("shake"); }, 1550);
 }
 
@@ -572,7 +614,7 @@ function showResult(ch){
   $("resName").textContent = ch.name; $("resSub").textContent = ch.sub;
   const sp = ch.group === "special";
   $("resultScreen").classList.toggle("special", sp);
-  if (sp) $("resLabel").textContent = "★ PERSONNAGE SPÉCIAL ! ★";
+  if (sp){ const pw = powerOf(ch); applyPower($("resultScreen"), pw); $("resLabel").textContent = `${pw.icon} ${pw.name} ${pw.icon}`; }
   $("removeBtn").hidden = chars.length <= 2;
   $("resultScreen").hidden = false;
   $("againBtn").focus({ preventScroll: true });
@@ -596,84 +638,190 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1300);
 }
 
-/* ---------- Confettis d'anneaux ---------- */
+/* ---------- Effets : confettis d'anneaux et pouvoirs ---------- */
 const fx = $("fx"), fctx = fx.getContext("2d");
-let parts = [], fxRunning = false;
+let parts = [], emitters = [], fxRunning = false;
 const RAINBOW = ["#ff4d6d","#ffd23a","#5cff8a","#3ad0ff","#b45cff","#ffffff"];
-let boltList = [];
-function bolts(){
-  sizeFx();
-  const W = fx.width, H = fx.height;
-  for (let k = 0; k < 7; k++){
-    const a = Math.random()*TAU, pts = [];
-    let x = W/2, y = H/2; const len = Math.hypot(W,H)*0.6, n = 9;
-    for (let i = 0; i <= n; i++){
-      const d = len*i/n, j = (Math.random()-.5)*len*0.09;
-      pts.push([W/2 + Math.cos(a)*d - Math.sin(a)*j, H/2 + Math.sin(a)*d + Math.cos(a)*j]);
-    }
-    boltList.push({ pts, life: -k*0.07, col: RAINBOW[k % 5] });
-  }
-  startFx();
+const rnd = (a, b) => a + Math.random()*(b - a);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+let fdpr = 1;
+function sizeFx(){
+  fdpr = Math.min(dpr, 1.5);
+  const w = Math.round(innerWidth * fdpr), h = Math.round(innerHeight * fdpr);
+  if (fx.width !== w || fx.height !== h){ fx.width = w; fx.height = h; }
 }
 function star(c, x, y, r, rot){
   c.beginPath();
   for (let i = 0; i < 10; i++){ const rr = i % 2 ? r*0.45 : r, a = rot + i*Math.PI/5; c.lineTo(x + Math.cos(a)*rr, y + Math.sin(a)*rr); }
   c.closePath();
 }
-function sizeFx(){
-  const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
-  if (fx.width !== w || fx.height !== h){ fx.width = w; fx.height = h; }
+// éclair en zigzag (déplacement du point milieu), avec une branche
+function boltPts(x0, y0, x1, y1, rough){
+  let pts = [[x0,y0],[x1,y1]], off = Math.hypot(x1-x0, y1-y0)*rough;
+  for (let k = 0; k < 5; k++){
+    const np = [pts[0]];
+    for (let i = 0; i < pts.length - 1; i++){
+      const [ax,ay] = pts[i], [bx,by] = pts[i+1], nx = ay - by, ny = bx - ax, l = Math.hypot(nx,ny) || 1, d = (Math.random()-.5)*off;
+      np.push([(ax+bx)/2 + nx/l*d, (ay+by)/2 + ny/l*d], [bx,by]);
+    }
+    pts = np; off /= 2;
+  }
+  return pts;
 }
-function confetti(special){
+function addBolt(x0, y0, x1, y1, col, o = {}){
+  const pts = boltPts(x0, y0, x1, y1, o.rough ?? 0.3), w = (o.w || 10)*fdpr, delay = o.delay || 0, max = o.max || 0.4;
+  parts.push({ type:"bolt", pts, col, core:o.core || "#fff", w, life:-delay, max });
+  const [bx, by] = pts[Math.floor(pts.length*rnd(.35,.65))], a = Math.atan2(y1-y0, x1-x0) + rnd(.4,.9)*(Math.random()<.5?-1:1), L = Math.hypot(x1-x0, y1-y0)*0.3;
+  parts.push({ type:"bolt", pts:boltPts(bx, by, bx + Math.cos(a)*L, by + Math.sin(a)*L, 0.35), col, core:o.core || "#fff", w:w*0.5, life:-delay, max });
+}
+const sprites = {};
+function glowSprite(col){ // disque lumineux pré-rendu, réutilisé pour flammes et étincelles
+  if (sprites[col]) return sprites[col];
+  const S = 64, cv = document.createElement("canvas"); cv.width = cv.height = S;
+  const g = cv.getContext("2d"), gr = g.createRadialGradient(S/2, S/2, 0, S/2, S/2, S/2);
+  gr.addColorStop(0, col); gr.addColorStop(.35, col + "cc"); gr.addColorStop(1, col + "00");
+  g.fillStyle = gr; g.fillRect(0, 0, S, S);
+  return sprites[col] = cv;
+}
+function emit(from, to, rate, fn){
+  const now = performance.now();
+  emitters.push({ start:now + from*1000, end:now + to*1000, rate, acc:0, fn });
+}
+function burstSparks(x, y, n, cols, speed, o = {}){
+  for (let i = 0; i < n; i++){
+    const a = rnd(0, TAU), v = rnd(.3, 1)*speed;
+    parts.push({ type:"spark", x, y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, r:rnd(2,5)*fdpr, col:pick(cols), life:-(o.delay||0), max:rnd(.4,.9), g:o.g ?? 1, drag:o.drag ?? 2.5 });
+  }
+}
+
+/* Un effet par pouvoir — centre de l'écran = portrait du héros */
+function powerFx(pw){
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   sizeFx();
-  const W = fx.width, H = fx.height;
-  const n = special ? 110 : 70;
-  for (let i = 0; i < n; i++){
-    parts.push({ x: W/2 + (Math.random()-.5)*W*0.2, y: H*0.45, vx: (Math.random()-.5)*W*(special ? 1.6 : 1.1), vy: -H*(0.6+Math.random()*(special ? 1.2 : 0.9)),
-      r: (8+Math.random()*10)*dpr, ph: Math.random()*TAU, sp: 6+Math.random()*10, life: 0,
-      kind: special && Math.random() < 0.6 ? "star" : "ring", col: RAINBOW[i % RAINBOW.length] });
+  const W = fx.width, H = fx.height, cx = W/2, cy = H/2, M = Math.min(W, H);
+  const fire = (x, y, vx, vy, r, max, extra) => parts.push(Object.assign({ type:"flame", x, y, vx, vy, r, cols:pw.c, life:0, max, ph:rnd(0,TAU) }, extra));
+  switch (pw.key){
+    case "lightning": // la foudre tombe du ciel sur le héros, étincelles dorées
+      for (let i = 0; i < 9; i++){
+        const d = i*0.11 + rnd(0,.05), tx = cx + rnd(-.3,.3)*W, ty = cy + rnd(-.15,.25)*H;
+        addBolt(rnd(.05,.95)*W, -20*fdpr, tx, ty, pick([pw.c[1], pw.c[2]]), { delay:d, w:13, max:.32 });
+        burstSparks(tx, ty, 16, pw.c, .55*H, { delay:d });
+      }
+      emit(0, 1.5, 90, () => { const a = rnd(0,TAU), r = rnd(.12,.2)*M;
+        parts.push({ type:"spark", x:cx + Math.cos(a)*r, y:cy + Math.sin(a)*r, vx:Math.cos(a)*rnd(60,220)*fdpr, vy:Math.sin(a)*rnd(60,220)*fdpr, r:rnd(2,4)*fdpr, col:pick(pw.c), life:0, max:rnd(.3,.6), g:0, drag:1 }); });
+      break;
+    case "darkfire": // un mur de flammes violettes monte du sol, le héros s'embrase
+      emit(0, 1.4, 300, () => fire(rnd(0,W), H + 30*fdpr, rnd(-20,20)*fdpr, -rnd(.5,1)*H, rnd(40,90)*fdpr, rnd(.7,1.1)));
+      emit(.2, 1.5, 130, () => { const a = rnd(0,TAU), r = rnd(.1,.17)*M; fire(cx + Math.cos(a)*r, cy + Math.sin(a)*r, 0, -rnd(.15,.3)*H, rnd(18,38)*fdpr, rnd(.4,.7)); });
+      emit(.1, 1.6, 50, () => parts.push({ type:"spark", x:rnd(0,W), y:H, vx:rnd(-40,40)*fdpr, vy:-rnd(.5,1)*H, r:rnd(2,4)*fdpr, col:pick(pw.c), life:0, max:rnd(.8,1.4), g:0, drag:.3 }));
+      break;
+    case "firestorm": // tornade de feu qui tourbillonne autour du héros
+      emit(0, 1.4, 380, () => parts.push({ type:"orbit", cx, cy, a:rnd(0,TAU), rad:rnd(.08,.14)*M, va:rnd(6,9), vr:rnd(.3,.6)*M, r:rnd(22,46)*fdpr, cols:pw.c, life:0, max:rnd(.7,1.1) }));
+      emit(.3, 1.5, 40, () => { const a = rnd(0,TAU), r = rnd(.2,.4)*M, v = rnd(.4,.8)*M;
+        parts.push({ type:"spark", x:cx + Math.cos(a)*r, y:cy + Math.sin(a)*r, vx:-Math.sin(a)*v, vy:Math.cos(a)*v, r:rnd(2,4)*fdpr, col:pick(pw.c), life:0, max:rnd(.5,.9), g:.3, drag:1 }); });
+      break;
+    case "shadow": // ondes de choc d'ombre, filaments, l'ombre est aspirée vers le héros
+      [0, .2, .4, .6].forEach((d, i) => parts.push({ type:"wave", x:cx, y:cy, r:30*fdpr, vr:Math.max(W,H)*rnd(1,1.2), w:(i % 2 ? 18 : 34)*fdpr, col:i % 2 ? pw.c[1] : "#05000a", life:-d, max:.8 }));
+      for (let i = 0; i < 8; i++){ const a = i/8*TAU + rnd(-.2,.2), L = Math.hypot(W,H)*0.55;
+        addBolt(cx, cy, cx + Math.cos(a)*L, cy + Math.sin(a)*L, pw.c[1], { delay:.1 + i*.05, w:9, max:.4, core:pw.c[2], rough:.25 }); }
+      emit(0, 1.3, 150, () => { const a = rnd(0,TAU), R = Math.hypot(W,H)/2, v = rnd(.7,1)*R;
+        parts.push({ type:"spark", x:cx + Math.cos(a)*R, y:cy + Math.sin(a)*R, vx:-Math.cos(a)*v, vy:-Math.sin(a)*v, r:rnd(3,7)*fdpr, col:pick([pw.c[0], pw.c[1], pw.c[2]]), life:0, max:rnd(.7,.92), g:0, drag:0 }); });
+      break;
+    default: // prism : éclairs arc-en-ciel depuis le centre + étincelles
+      for (let k = 0; k < 7; k++){ const a = rnd(0,TAU), L = Math.hypot(W,H)*0.6;
+        addBolt(cx, cy, cx + Math.cos(a)*L, cy + Math.sin(a)*L, RAINBOW[k % 5], { delay:k*.07, w:12, max:.45, rough:.12 }); }
+      emit(0, 1.4, 120, () => { const a = rnd(0,TAU), v = rnd(.2,.6)*M;
+        parts.push({ type:"spark", x:cx, y:cy, vx:Math.cos(a)*v, vy:Math.sin(a)*v, r:rnd(2,5)*fdpr, col:pick(RAINBOW), life:0, max:rnd(.5,1), g:.2, drag:1 }); });
   }
   startFx();
 }
-function startFx(){
-  if (!fxRunning){ fxRunning = true; let lt = performance.now(); requestAnimationFrame(function loop(t){
-    const dt = Math.min(0.05,(t-lt)/1000); lt = t;
-    const W = fx.width, H = fx.height;
-    fctx.clearRect(0,0,W,H);
-    parts = parts.filter(p => p.life < 3.2 && p.y < H + 50);
-    boltList = boltList.filter(b => b.life < 0.45);
-    for (const b of boltList){
-      b.life += dt; if (b.life < 0) continue;
-      fctx.save(); fctx.globalAlpha = Math.max(0, 1 - b.life/0.45) * (Math.random() < 0.3 ? 0.5 : 1);
-      fctx.lineJoin = "round"; fctx.lineCap = "round";
-      fctx.beginPath(); b.pts.forEach(([x,y],i) => i ? fctx.lineTo(x,y) : fctx.moveTo(x,y));
-      fctx.shadowColor = b.col; fctx.shadowBlur = 30*dpr;
-      fctx.lineWidth = 12*dpr; fctx.strokeStyle = b.col; fctx.stroke();
-      fctx.shadowBlur = 0; fctx.lineWidth = 4*dpr; fctx.strokeStyle = "#fff"; fctx.stroke();
-      fctx.restore();
+
+function confetti(pw){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  sizeFx();
+  const W = fx.width, H = fx.height, cols = pw ? (pw.key === "prism" ? RAINBOW : [...pw.c, "#ffffff"]) : null;
+  const n = pw ? 110 : 70;
+  for (let i = 0; i < n; i++){
+    parts.push({ type: pw && Math.random() < 0.6 ? "star" : "ring", x: W/2 + (Math.random()-.5)*W*0.2, y: H*0.45,
+      vx: (Math.random()-.5)*W*(pw ? 1.6 : 1.1), vy: -H*(0.6+Math.random()*(pw ? 1.2 : 0.9)),
+      r: (8+Math.random()*10)*fdpr, ph: Math.random()*TAU, sp: 6+Math.random()*10, life: 0, max: 3.2, col: cols ? cols[i % cols.length] : null });
+  }
+  startFx();
+}
+
+function drawPart(p, dt, W, H){
+  const k = Math.max(0, p.life / p.max), c = fctx;
+  c.save();
+  switch (p.type){
+    case "bolt": {
+      c.globalAlpha = (1 - k) * (Math.random() < 0.3 ? 0.45 : 1);
+      c.lineJoin = c.lineCap = "round"; c.globalCompositeOperation = "lighter";
+      c.beginPath(); p.pts.forEach(([x,y],i) => i ? c.lineTo(x,y) : c.moveTo(x,y));
+      c.globalAlpha *= 0.35; c.lineWidth = p.w*2.2; c.strokeStyle = p.col; c.stroke();
+      c.globalAlpha /= 0.35; c.lineWidth = p.w; c.stroke();
+      c.lineWidth = p.w*0.35; c.strokeStyle = p.core; c.stroke();
+      break;
     }
-    for (const p of parts){
-      p.life += dt; p.vy += H*1.6*dt; p.vx *= (1 - 0.8*dt); p.x += p.vx*dt; p.y += p.vy*dt; p.ph += p.sp*dt;
+    case "spark": {
+      p.vx *= 1 - p.drag*dt; p.vy = p.vy*(1 - p.drag*dt) + p.g*H*dt; p.x += p.vx*dt; p.y += p.vy*dt;
+      c.globalCompositeOperation = "lighter"; c.globalAlpha = 1 - k;
+      const sr = p.r*(1 - k*0.5)*2.2; c.drawImage(glowSprite(p.col), p.x - sr, p.y - sr, sr*2, sr*2);
+      break;
+    }
+    case "flame": case "orbit": {
+      let x, y;
+      if (p.type === "flame"){ p.x += (p.vx + Math.sin(p.life*9 + p.ph)*60*fdpr)*dt; p.y += p.vy*dt; x = p.x; y = p.y; }
+      else { p.a += p.va*dt; p.rad += p.vr*dt; x = p.cx + Math.cos(p.a)*p.rad; y = p.cy + Math.sin(p.a)*p.rad*0.8; }
+      const stage = k < 0.3 ? 0 : k < 0.65 ? 1 : 2, col = p.cols[stage], r = p.r*(1 - k*0.55);
+      // le cœur brille (addition), la fin de la flamme devient fumée
+      c.globalCompositeOperation = stage < 2 ? "lighter" : "source-over";
+      c.globalAlpha = (1 - k)*(stage < 2 ? 0.85 : 0.5);
+      c.drawImage(glowSprite(col), x - r, y - r, r*2, r*2);
+      break;
+    }
+    case "wave": {
+      p.r += p.vr*dt*(1 - k*0.6);
+      c.globalAlpha = (1 - k)*0.9; c.lineWidth = p.w*(1 - k*0.5); c.strokeStyle = p.col;
+      c.beginPath(); c.arc(p.x, p.y, p.r, 0, TAU); c.stroke();
+      c.globalAlpha *= 0.35; c.lineWidth *= 2.2; c.stroke();
+      break;
+    }
+    default: { // anneaux et étoiles qui retombent
+      p.vy += H*1.6*dt; p.vx *= (1 - 0.8*dt); p.x += p.vx*dt; p.y += p.vy*dt; p.ph += p.sp*dt;
+      if (p.y > H + 50) p.life = p.max;
       const sx = Math.abs(Math.cos(p.ph));
-      fctx.save(); fctx.globalAlpha = Math.min(1, 3.2 - p.life);
-      if (p.kind === "star"){
-        star(fctx, p.x, p.y, p.r*1.1*Math.max(.3,sx), p.ph*0.3);
-        fctx.fillStyle = p.col; fctx.fill(); fctx.lineWidth = p.r*0.15; fctx.strokeStyle = "#0a1f4d"; fctx.stroke();
+      c.globalAlpha = Math.min(1, p.max - p.life);
+      if (p.type === "star"){
+        star(c, p.x, p.y, p.r*1.1*Math.max(.3,sx), p.ph*0.3);
+        c.fillStyle = p.col; c.fill(); c.lineWidth = p.r*0.15; c.strokeStyle = "#0a1f4d"; c.stroke();
       } else {
-        fctx.beginPath(); fctx.ellipse(p.x, p.y, p.r*Math.max(.12,sx), p.r, 0, 0, TAU);
-        if (p.kind === "ring" && p.col){
-          fctx.lineWidth = p.r*0.38; fctx.strokeStyle = "#0a1f4d"; fctx.stroke();
-          fctx.lineWidth = p.r*0.24; fctx.strokeStyle = p.col; fctx.stroke();
-        } else {
-          fctx.lineWidth = p.r*0.38; fctx.strokeStyle = "#b86b00"; fctx.stroke();
-          fctx.lineWidth = p.r*0.24; fctx.strokeStyle = "#ffd93a"; fctx.stroke();
-        }
+        c.beginPath(); c.ellipse(p.x, p.y, p.r*Math.max(.12,sx), p.r, 0, 0, TAU);
+        c.lineWidth = p.r*0.38; c.strokeStyle = p.col ? "#0a1f4d" : "#b86b00"; c.stroke();
+        c.lineWidth = p.r*0.24; c.strokeStyle = p.col || "#ffd93a"; c.stroke();
       }
-      fctx.restore();
     }
-    if (parts.length || boltList.length) requestAnimationFrame(loop); else { fxRunning = false; fctx.clearRect(0,0,W,H); }
-  }); }
+  }
+  c.restore();
+}
+
+function startFx(){
+  if (fxRunning) return;
+  fxRunning = true; let lt = performance.now();
+  requestAnimationFrame(function loop(t){
+    const dt = Math.min(0.05, (t - lt)/1000); lt = t;
+    const W = fx.width, H = fx.height, now = performance.now();
+    fctx.clearRect(0, 0, W, H);
+    emitters = emitters.filter(e => now < e.end);
+    for (const e of emitters){
+      if (now < e.start) continue;
+      e.acc += e.rate*dt;
+      while (e.acc >= 1){ e.acc--; e.fn(); }
+    }
+    parts = parts.filter(p => p.life < p.max);
+    for (const p of parts){ p.life += dt; if (p.life >= 0) drawPart(p, dt, W, H); }
+    if (parts.length || emitters.length) requestAnimationFrame(loop);
+    else { fxRunning = false; fctx.clearRect(0, 0, W, H); }
+  });
 }
 
 /* ========================================================================
@@ -861,26 +1009,55 @@ const audio = (() => {
     });
     for (let i = 0; i < 6; i++) chime(t + 0.55 + i*0.11, 1319 + i*40, 2093 + i*60, 0.08);
   }
-  function superWin(){
+  function superWin(power){
     if (!ac || !sfxOn) return;
-    const t = ac.currentTime + 0.02;
+    const t = ac.currentTime + 0.02, dark = power === "darkfire" || power === "shadow";
     musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(musicOn ? 0.08 : 0, t, 0.04); musicBus.gain.setTargetAtTime(musicOn ? 0.55 : 0, t + 3.4, 0.4);
-    // montée d'énergie
-    const o = ac.createOscillator(), g = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
-    o.type = "sawtooth"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(1760, t + 0.9);
-    lfo.frequency.value = 18; lg.gain.value = 40; lfo.connect(lg).connect(o.frequency);
-    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(600, t); lp.frequency.exponentialRampToValueAtTime(6000, t + 0.9);
-    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.0);
-    o.connect(lp).connect(g).connect(sfxBus); o.start(t); lfo.start(t); o.stop(t + 1.05); lfo.stop(t + 1.05);
-    // coup de tonnerre
-    noise(t, 0.9, "lowpass", 900, 0.6, sfxBus);
-    noise(t + 0.02, 0.25, "highpass", 3000, 0.25, sfxBus);
-    // fanfare majestueuse
-    const T = t + 0.95;
-    const fan = [[67,0,.12],[72,1,.12],[76,2,.12],[79,3,.12],[84,4,.3],[83,5.2,.12],[84,6,.12],[88,7,1.1]];
+    const sweep = (type, f0, f1, dur, vol, lfoHz, lfoAmt) => {
+      const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
+      o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      if (lfoHz){ const l = ac.createOscillator(), lg = ac.createGain(); l.frequency.value = lfoHz; lg.gain.value = lfoAmt; l.connect(lg).connect(o.frequency); l.start(t); l.stop(t + dur + 0.1); }
+      lp.type = "lowpass"; lp.frequency.setValueAtTime(600, t); lp.frequency.exponentialRampToValueAtTime(6000, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur*0.75); g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.1);
+      o.connect(lp).connect(g).connect(sfxBus); o.start(t); o.stop(t + dur + 0.15);
+    };
+    // bruit filtré dont la fréquence se déplace (feu, vent)
+    const roar = (type, f0, f1, dur, vol, q, wobble) => {
+      const s = ac.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+      const f = ac.createBiquadFilter(); f.type = type; f.Q.value = q; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      if (wobble){ const l = ac.createOscillator(), lg = ac.createGain(); l.frequency.value = wobble; lg.gain.value = f0*0.6; l.connect(lg).connect(f.frequency); l.start(t); l.stop(t + dur); }
+      const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur*0.5); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      s.connect(f).connect(g).connect(sfxBus); s.start(t); s.stop(t + dur + 0.05);
+    };
+    const crack = at => { const tt = t + at; noise(tt, 0.08, "highpass", 2500, 0.5, sfxBus); noise(tt, 0.7, "lowpass", 700, 0.55, sfxBus); };
+    switch (power){
+      case "lightning": sweep("sawtooth", 220, 1760, 0.8, 0.07, 22, 30); [0, .13, .27, .4, .55, .7, .9, 1.1].forEach(crack); break;
+      case "darkfire":
+        roar("bandpass", 250, 900, 1.6, 0.5, 0.7, 0); roar("lowpass", 160, 320, 1.4, 0.4, 1, 0);
+        for (let i = 0; i < 26; i++) noise(t + Math.random()*1.4, 0.02, "highpass", 4000, 0.25*Math.random(), sfxBus); // crépitements
+        sweep("sawtooth", 80, 330, 1.0, 0.05, 6, 15); break;
+      case "firestorm":
+        roar("bandpass", 300, 2400, 1.6, 0.55, 2.5, 7); roar("lowpass", 200, 500, 1.5, 0.35, 1, 0);
+        sweep("triangle", 200, 1400, 1.0, 0.06, 12, 80); break;
+      case "shadow": {
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = "sawtooth";
+        o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(36, t + 1.3);
+        const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 500;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.2); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+        o.connect(lp).connect(g).connect(sfxBus); o.start(t); o.stop(t + 1.45);
+        roar("lowpass", 2000, 150, 1.3, 0.35, 1, 0);
+        [0, .25, .5, .8].forEach(d => noise(t + d, 0.5, "lowpass", 260, 0.6, sfxBus)); break;
+      }
+      default: sweep("sawtooth", 110, 1760, 0.9, 0.09, 18, 40); crack(0);
+        for (let i = 0; i < 10; i++) chime(t + 0.1 + i*0.08, 1568 + i*90, 2637 + i*110, 0.05);
+    }
+    // fanfare : majeure pour les héros, mineure pour les pouvoirs sombres
+    const T = t + 0.95, third = dark ? 3 : 4;
+    const fan = dark ? [[67,0,.12],[72,1,.12],[75,2,.12],[79,3,.12],[84,4,.3],[83,5.2,.12],[84,6,.12],[87,7,1.1]]
+                     : [[67,0,.12],[72,1,.12],[76,2,.12],[79,3,.12],[84,4,.3],[83,5.2,.12],[84,6,.12],[88,7,1.1]];
     fan.forEach(([m, k, len]) => {
       const st = T + k*0.1, end = st + len;
-      [0, 4, 7].forEach((iv, j) => {
+      [0, third, 7].forEach((iv, j) => {
         const os = ac.createOscillator(), gg = ac.createGain(); os.type = j ? "triangle" : "square";
         os.frequency.value = mtof(m + (j ? iv - 12 : 0)); os.detune.value = j*6;
         gg.gain.setValueAtTime(0.0001, st); gg.gain.exponentialRampToValueAtTime(j ? 0.06 : 0.1, st + 0.01);
@@ -888,7 +1065,7 @@ const audio = (() => {
         os.connect(gg).connect(sfxBus); os.start(st); os.stop(end + 0.3);
       });
     });
-    for (let i = 0; i < 12; i++) chime(T + 0.3 + i*0.09, 1568 + i*70, 2637 + i*90, 0.06);
+    for (let i = 0; i < 12; i++) chime(T + 0.3 + i*0.09, (dark ? 1480 : 1568) + i*70, 2637 + i*90, 0.06);
   }
   function setSpinLevel(w){
     if (!spinNode) return;
@@ -934,6 +1111,7 @@ function buildHome(){
         $("resName").textContent = c.name; $("resSub").textContent = "";
         $("againBtn").textContent = "FERMER"; $("removeBtn").hidden = true;
         $("resultScreen").classList.toggle("special", c.group === "special");
+        if (c.group === "special"){ const pw = powerOf(c); applyPower($("resultScreen"), pw); $("resLabel").textContent = `${pw.icon} ${pw.name} ${pw.icon}`; }
         $("resultScreen").hidden = false; $("againBtn").focus({ preventScroll: true });
       });
       grid.appendChild(b);
